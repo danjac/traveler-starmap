@@ -24,7 +24,6 @@ class SubsectorList(Resource):
         Should return subsector details
 
         We need some limit on the number of subectors
-
         """
         subsector = generator.generate_subsector('./names.txt')
 
