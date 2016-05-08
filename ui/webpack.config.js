@@ -31,7 +31,15 @@ loaders = [
     loaders: ['react-hot', 'babel'],
     include: path.join(__dirname, 'src'),
     exclude: /node_modules/,
-  }
+  },
+  {
+    test: /\.css$/,
+    loaders: ['style-loader', 'css-loader'],
+  },
+  {
+    test: /\.(png|woff|woff2|eot|ttf|svg)/,
+    loader: 'url-loader?limit=200000',
+  },
 ];
 
 module.exports = {
