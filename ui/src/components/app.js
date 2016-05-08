@@ -1,5 +1,8 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
+import ReactDOM from 'react-dom';
 import * as bs from 'react-bootstrap';
+
+import Starmap from './starmap';
 
 require('bootstrap/dist/css/bootstrap.min.css');
 require('bootstrap/dist/css/bootstrap-theme.min.css');
@@ -32,10 +35,27 @@ const worlds = [
 
 
 class App extends React.Component {
+
+  constructor(props) {
+    super(props);
+    this.state = { rotation: 0 };
+//this.tick = this.tick.bind(this);
+  }
+
+  componentDidMount() {
+//window.requestAnimationFrame(this.tick);
+  }
+
+  tick() {
+    this.setState({ rotation: this.state.rotation + 0.1 });
+    window.requestAnimationFrame(this.tick);
+  }
+
   render() {
+    console.log("rendering....");
     return (
       <bs.Grid>
-        <h2>Subsector Merengha</h2>
+        <h2>Subsector Merenga</h2>
         <bs.Row>
           <bs.Col md={8}>
             <bs.ButtonGroup>
@@ -85,7 +105,7 @@ class App extends React.Component {
             </table>
           </bs.Col>
           <bs.Col md={4}>
-            <img src={starmap} />
+            <Starmap />
           </bs.Col>
         </bs.Row>
       </bs.Grid>
