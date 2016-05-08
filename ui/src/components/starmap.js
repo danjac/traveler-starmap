@@ -40,7 +40,7 @@ class Hexagon {
       new Point(x, y1 + y),
     ];
 
-    let firstDigit = col + 1;
+    const firstDigit = col + 1;
     let secondDigit = row;
 
     if (col % 2 === 0) {
@@ -59,6 +59,13 @@ class Hexagon {
     this.topLeft = new Point(this.x, this.y);
     this.bottomRight = new Point(this.x + WIDTH, this.y + HEIGHT);
     this.middle = new Point(this.x + (WIDTH / 2), this.y + (HEIGHT / 2));
+  }
+
+  contains(x, y) {
+    return (this.topLeft.x < x &&
+      this.topLeft.y < y &&
+      x < this.bottomRight.x &&
+      y < this.bottomRight.y);
   }
 
   draw(ctx) {
@@ -104,6 +111,7 @@ class Grid {
       while (x + WIDTH <= width) {
         const hex = new Hexagon(row, col, x, y);
         this.hexes.push(hex);
+        this.hexesDict[hex.id] = hex;
         col += 2;
         x += WIDTH + SIDE;
       }
@@ -112,12 +120,28 @@ class Grid {
     }
   }
   draw(ctx) {
-    ctx.clearRect(0, 0, 800, 800);
+    ctx.clearRect(0, 0, 360, 550);
     this.hexes.forEach(hex => hex.draw(ctx));
+  }
+
+  getHexByXY(x, y) {
+    for (let i = 0; i < this.hexes.length; i++) {
+      const hex = this.hexes[i];
+      if (hex.contains(x, y)) {
+        return hex;
+      }
+    }
+    return null;
   }
 }
 
 class Starmap extends React.Component {
+
+  constructor(props) {
+    super(props);
+    this.onClick = this.onClick.bind(this);
+    this.grid = new Grid(360, 560);
+  }
 
   componentDidMount() {
     this.paint(this.getDOMNode().getContext('2d'));
@@ -127,18 +151,33 @@ class Starmap extends React.Component {
     const ctx = this.getDOMNode().getContext('2d');
     this.paint(ctx);
   }
-
   getDOMNode() {
     return ReactDOM.findDOMNode(this);
   }
 
+  onClick(event) {
+    let totalOffsetX = 0;
+    let totalOffsetY = 0;
+    let element = event.currentTarget;
+
+    while (element) {
+      totalOffsetX += element.offsetLeft - element.scrollLeft;
+      totalOffsetY += element.offsetTop - element.scrollTop;
+      element = element.offsetParent;
+    }
+
+    const x = event.pageX - totalOffsetX - document.body.scrollLeft;
+    const y = event.pageY - totalOffsetY - document.body.scrollTop;
+
+    console.log(this.grid.getHexByXY(x, y));
+  }
+
   paint(ctx) {
-    this.grid = new Grid(360, 560);
     this.grid.draw(ctx);
   }
 
   render() {
-    return <canvas width={360} height={550} />;
+    return <canvas width={360} height={550} onClick={this.onClick} />;
   }
 
 }
