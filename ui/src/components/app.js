@@ -32,6 +32,8 @@ const WorldDetail = props => {
         <dd>{world.coords}</dd>
         <dt>UWP</dt>
         <dd>{world.uwp}</dd>
+        <dt>Travel code</dt>
+        <dd style={{ color: '#090' }}>Green</dd>
         <dt>Starport</dt>
         <dd>{world.starport}</dd>
         <dt>Size</dt>
@@ -133,6 +135,9 @@ class App extends React.Component {
 
     const { worlds } = subsector;
 
+    const pngUrl = `${actions.API_URL}${subsector.id}/map/`;
+    const csvUrl = `${actions.API_URL}${subsector.id}/csv/`;
+
     return (
       <bs.Grid>
         <h2>Subsector {subsector.name}</h2>
@@ -142,8 +147,12 @@ class App extends React.Component {
               <bs.Button onClick={onNewSubsector}>
                 <bs.Glyphicon glyph="star" /> New subsector
               </bs.Button>
-              <bs.Button><bs.Glyphicon glyph="download" /> Download CSV</bs.Button>
-              <bs.Button><bs.Glyphicon glyph="download" /> Download map (PNG)</bs.Button>
+              <a className="btn btn-default" href={csvUrl}>
+                <bs.Glyphicon glyph="download" /> Download CSV
+              </a>
+              <a className="btn btn-default" href={pngUrl}>
+                <bs.Glyphicon glyph="map-marker" /> Download map (PNG)
+              </a>
             </bs.ButtonGroup>
           </bs.Col>
           <bs.Col md={4}>

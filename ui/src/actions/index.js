@@ -1,6 +1,6 @@
 import fetch from 'isomorphic-fetch';
 
-const API_URL = 'http://localhost:5000/';
+export const API_URL = 'http://localhost:5000/';
 
 
 export function selectWorld(world) {

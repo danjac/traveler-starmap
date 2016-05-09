@@ -1,4 +1,5 @@
 import io
+import csv
 
 from flask import Flask, send_file, jsonify, make_response
 from flask_cors import CORS
@@ -16,15 +17,6 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/starmap.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 
 db.init_app(app)
-
-
-def create_subsector():
-    # names file should be arg/setting
-    subsector = generator.generate_subsector('./names.txt')
-
-    db.session.add(subsector)
-    db.session.commit()
-    return subsector
 
 
 @app.route("/", methods=['POST'])
@@ -66,6 +58,72 @@ def get_subsector_detail(id):
     return jsonify(subsector.to_json())
 
 
+@app.route("/<int:id>/csv/")
+def download_csv(id):
+    """
+    Download details as a CSV
+    """
+    fp = io.StringIO()
+    subsector = Subsector.query.get_or_404(id)
+
+    writer = csv.writer(fp)
+
+    writer.writerow([
+        "Name",
+        "Coords",
+        "UWP",
+        "Starport",
+        "Size",
+        "Atmosphere",
+        "Temperature",
+        "Hydrographics",
+        "Population",
+        "Government",
+        "Law level",
+        "Tech level",
+        "Notes",
+        "Gas giant?",
+        "Scout base?",
+        "Naval base?",
+        "Research base?",
+        "Pirate base?",
+        "Traveler's Aid Society?",
+        "Imperial consulate?",
+    ])
+
+    for world in subsector.worlds:
+
+        writer.writerow([
+            world.coords_desc,
+            world.uwp,
+            world.starport,
+            world.size_desc,
+            world.atmosphere_desc,
+            world.temperature_desc,
+            world.hydrographics_desc,
+            world.population_desc,
+            world.government_desc,
+            world.law_level_desc,
+            world.tech_level,
+            world.long_trade_classifications,
+            yesno(world.is_gas_giant),
+            yesno(world.is_scout_base),
+            yesno(world.is_naval_base),
+            yesno(world.is_research_base),
+            yesno(world.is_pirate_base),
+            yesno(world.is_tas),
+            yesno(world.is_consulate),
+        ])
+
+    fp.seek(0)
+    return send_file(
+        fp,
+        mimetype='text/csv',
+        as_attachment=True,
+        attachment_filename='subsector.csv',
+    )
+
+
 @app.route("/<int:id>/map/")
 def download_map(id):
     """
@@ -75,8 +133,25 @@ def download_map(id):
     subsector = Subsector.query.get_or_404(id)
     map.draw_map(fp, subsector.worlds)
     fp.seek(0)
-    return send_file(fp, mimetype='image/png')
+    return send_file(
+        fp,
+        mimetype='image/png',
+        as_attachment=True,
+        attachment_filename='starmap.png',
+    )
 
+
+def create_subsector():
+    # names file should be arg/setting
+    subsector = generator.generate_subsector('./names.txt')
+
+    db.session.add(subsector)
+    db.session.commit()
+    return subsector
+
+
+def yesno(value):
+    return "Yes" if value else "No"
 
 if __name__ == "__main__":
     with app.app_context():
