@@ -125,11 +125,7 @@ const WorldList = (props) => {
       </thead>
       <tbody>
       {props.worlds.map((w) => (
-      <tr
-        key={w.coords}
-        className={w.selected ? 'info' : ''}
-        onClick={selectWorld(w)}
-      >
+      <tr key={w.coords} onClick={selectWorld(w)}>
           <td>{w.coords}</td>
           <td>{w.name}</td>
           <td>{w.uwp}</td>
@@ -161,21 +157,12 @@ class App extends React.Component {
   }
 
   onSelectWorld(world) {
-    const worlds = this.state.worlds;
-    let selected = null;
-
-    for (let i = 0; i < worlds.length; i++) {
-      if (world && world.coords === worlds[i].coords) {
-        worlds[i].selected = true;
-        selected = world;
-      } else {
-        worlds[i].selected = false;
-      }
-    }
-    this.setState({ worlds, selected });
+    this.setState({ selected: world });
   }
 
   render() {
+    const { worlds, selected } = this.state;
+
     return (
       <bs.Grid>
         <h2>Subsector Merenga</h2>
@@ -204,13 +191,13 @@ class App extends React.Component {
         </bs.Row>
         <bs.Row>
           <bs.Col md={8}>
-            {this.state.selected ?
-            <WorldDetail world={this.state.selected} onSelectAll={this.onSelectAll}/> :
-            <WorldList worlds={this.state.worlds} onSelectWorld={this.onSelectWorld} />
+            {selected ?
+            <WorldDetail world={selected} onSelectAll={this.onSelectAll}/> :
+            <WorldList worlds={worlds} onSelectWorld={this.onSelectWorld} />
             }
           </bs.Col>
           <bs.Col md={4}>
-            <Starmap worlds={this.state.worlds} onSelectWorld={this.onSelectWorld} />
+            <Starmap worlds={worlds} selected={selected} onSelectWorld={this.onSelectWorld} />
           </bs.Col>
         </bs.Row>
       </bs.Grid>

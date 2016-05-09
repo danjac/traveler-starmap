@@ -38,9 +38,10 @@ class Point {
 }
 
 class Hexagon {
-  constructor(id, world, x, y) {
+  constructor(id, world, isSelected, x, y) {
     this.id = id;
     this.world = world;
+    this.isSelected = isSelected;
 
     const x1 = (WIDTH - SIDE) / 2;
     const y1 = HEIGHT / 2;
@@ -81,7 +82,7 @@ class Hexagon {
       ctx.lineTo(point.x, point.y);
     }
     ctx.closePath();
-    if (this.world && this.world.selected) {
+    if (this.isSelected) {
       ctx.fillStyle = '#D9EDF7';
       ctx.fill();
     }
@@ -110,7 +111,7 @@ class Hexagon {
 }
 
 
-function createHexes(worlds) {
+function createHexes(worlds, selected) {
   const hexes = [];
   const worldsDict = {};
 
@@ -130,7 +131,8 @@ function createHexes(worlds) {
     while (x + WIDTH <= MAP_WIDTH) {
       const hexId = makeHexId(col, row);
       const world = worldsDict[hexId];
-      const hex = new Hexagon(hexId, world, x, y);
+      const isSelected = selected && world && selected.coords === world.coords;
+      const hex = new Hexagon(hexId, world, isSelected, x, y);
 
       hexes.push(hex);
       col += 2;
@@ -149,7 +151,7 @@ class Starmap extends React.Component {
     super(props);
     this.onClick = this.onClick.bind(this);
     this.state = {
-      hexes: createHexes(this.props.worlds),
+      hexes: createHexes(this.props.worlds, this.props.selected),
     };
   }
 
@@ -159,7 +161,7 @@ class Starmap extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     this.setState({
-      hexes: createHexes(nextProps.worlds),
+      hexes: createHexes(nextProps.worlds, nextProps.selected),
     });
   }
 
@@ -218,6 +220,7 @@ class Starmap extends React.Component {
 
 Starmap.propTypes = {
   worlds: PropTypes.array.isRequired,
+  selected: PropTypes.object,
   onSelectWorld: PropTypes.func.isRequired,
 };
 
