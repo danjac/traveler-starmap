@@ -1,6 +1,8 @@
 const initialState = {
   subsector: null,
   selected: null,
+  searchResults: [],
+  isSearchLoading: false,
 };
 
 export default function (state = initialState, action) {
@@ -12,6 +14,16 @@ export default function (state = initialState, action) {
     case 'NEW_SUBSECTOR_SUCCESS':
       return Object.assign({}, state, {
         subsector: action.payload,
+      });
+    case 'SEARCH_RESULTS_REQUEST':
+      return Object.assign({}, state, {
+//searchResults: [],
+        isSearchLoading: true,
+      });
+    case 'SEARCH_RESULTS_SUCCESS':
+      return Object.assign({}, state, {
+        searchResults: action.payload,
+        isSearchLoading: false,
       });
     default:
       return state;

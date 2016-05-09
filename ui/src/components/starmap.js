@@ -131,7 +131,7 @@ function createHexes(worlds, selected) {
     while (x + WIDTH <= MAP_WIDTH) {
       const hexId = makeHexId(col, row);
       const world = worldsDict[hexId];
-      const isSelected = selected && world && selected.coords === world.coords;
+      const isSelected = selected && world && selected.id === world.id;
       const hex = new Hexagon(hexId, world, isSelected, x, y);
 
       hexes.push(hex);

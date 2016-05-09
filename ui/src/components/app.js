@@ -1,4 +1,5 @@
 import React, { PropTypes } from 'react';
+import Select from 'react-select';
 import { connect } from 'react-redux';
 import * as bs from 'react-bootstrap';
 import * as actions from '../actions';
@@ -7,23 +8,52 @@ import Starmap from './starmap';
 
 require('bootstrap/dist/css/bootstrap.min.css');
 require('bootstrap/dist/css/bootstrap-theme.min.css');
+require('react-select/dist/react-select.min.css');
 
+
+const Search = props => {
+  const optionRenderer = option => {
+    if (option.world) {
+      return `${option.world.name}/${option.subsector.name}`;
+    }
+    return `${option.subsector.name} Subsector`;
+  };
+
+  return (
+    <bs.FormGroup>
+      <bs.InputGroup>
+        <bs.InputGroup.Addon>
+          <bs.Glyphicon glyph="search" />
+        </bs.InputGroup.Addon>
+        <Select
+          name="search"
+          autoload
+          clearable
+          placeholder="Search world or subsector..."
+          cache={false}
+          isLoading={props.isSearchLoading}
+          options={props.searchResults}
+          optionRenderer={optionRenderer}
+          onInputChange={props.onSearch}
+          onChange={props.onSearchSelect}
+        />
+      </bs.InputGroup>
+      <bs.FormControl.Feedback />
+    </bs.FormGroup>
+  );
+};
+
+Search.propTypes = {
+  onSearch: PropTypes.func.isRequired,
+  onSearchSelect: PropTypes.func.isRequired,
+  isSearchLoading: PropTypes.bool,
+  searchResults: PropTypes.array,
+};
 
 const WorldDetail = props => {
   const { world } = props;
 
-  const header = (
-    <bs.Grid fluid>
-      <bs.Row>
-        <bs.Col md={9}><h3>{world.name}</h3></bs.Col>
-        <bs.Col md={3}>
-          <bs.Button onClick={props.onSelectAll}>
-            <bs.Glyphicon glyph="list" /> View all
-          </bs.Button>
-        </bs.Col>
-      </bs.Row>
-    </bs.Grid>
-  );
+  const header = <h3>{world.name}</h3>;
 
   return (
     <bs.Panel header={header}>
@@ -80,7 +110,6 @@ const WorldDetail = props => {
 
 WorldDetail.propTypes = {
   world: PropTypes.object.isRequired,
-  onSelectAll: PropTypes.func.isRequired,
 };
 
 
@@ -124,6 +153,9 @@ class App extends React.Component {
     const {
       subsector,
       selected,
+      searchResults,
+      onSearch,
+      onSearchSelect,
       onSelectWorld,
       onNewSubsector,
       onSelectAll,
@@ -145,7 +177,7 @@ class App extends React.Component {
           <bs.Col md={8}>
             <bs.ButtonGroup>
               <bs.Button onClick={onNewSubsector}>
-                <bs.Glyphicon glyph="star" /> New subsector
+                <bs.Glyphicon glyph="plus" /> New subsector
               </bs.Button>
               <a className="btn btn-default" href={csvUrl}>
                 <bs.Glyphicon glyph="download" /> Download CSV
@@ -153,27 +185,24 @@ class App extends React.Component {
               <a className="btn btn-default" href={pngUrl}>
                 <bs.Glyphicon glyph="map-marker" /> Download map (PNG)
               </a>
+              {selected ?
+              <bs.Button onClick={onSelectAll}>
+                <bs.Glyphicon glyph="list" /> View all
+              </bs.Button> : ''}
             </bs.ButtonGroup>
           </bs.Col>
           <bs.Col md={4}>
-            <bs.FormGroup>
-              <bs.InputGroup>
-                <bs.InputGroup.Addon>
-                  <bs.Glyphicon glyph="search" />
-                </bs.InputGroup.Addon>
-                <bs.FormControl
-                  type="search"
-                  placeholder="Find world or subsector..."
-                />
-              </bs.InputGroup>
-              <bs.FormControl.Feedback />
-            </bs.FormGroup>
+            <Search
+              searchResults={searchResults}
+              onSearchSelect={onSearchSelect}
+              onSearch={onSearch}
+            />
           </bs.Col>
         </bs.Row>
         <bs.Row>
           <bs.Col md={8}>
             {selected ?
-            <WorldDetail world={selected} onSelectAll={onSelectAll}/> :
+            <WorldDetail world={selected} /> :
             <WorldList worlds={worlds} onSelectWorld={onSelectWorld} />
             }
           </bs.Col>
@@ -189,6 +218,10 @@ class App extends React.Component {
 App.propTypes = {
   selected: PropTypes.object,
   subsector: PropTypes.object,
+  searchResults: PropTypes.array,
+  isSearchLoading: PropTypes.bool,
+  onSearch: PropTypes.func.isRequired,
+  onSearchSelect: PropTypes.func.isRequired,
   onSelectAll: PropTypes.func.isRequired,
   onSelectWorld: PropTypes.func.isRequired,
   onNewSubsector: PropTypes.func.isRequired,
@@ -196,10 +229,11 @@ App.propTypes = {
 
 
 const mapStateToProps = state => {
-  const { subsector, selected } = state;
+  const { subsector, selected, searchResults } = state;
   return {
     subsector,
     selected,
+    searchResults,
   };
 };
 
@@ -214,6 +248,12 @@ const mapDispatchToProps = dispatch => {
     },
     onNewSubsector() {
       dispatch(actions.newSubsector());
+    },
+    onSearch(value) {
+      dispatch(actions.search(value));
+    },
+    onSearchSelect(value) {
+      dispatch(actions.jumpTo(value));
     },
   };
 };

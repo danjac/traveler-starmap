@@ -1,13 +1,22 @@
 import io
 import csv
 
-from flask import Flask, send_file, jsonify, make_response
+from flask import (
+    Flask,
+    send_file,
+    jsonify,
+    request,
+    abort,
+    make_response,
+)
+
 from flask_cors import CORS
 
+from sqlalchemy.orm import joinedload
 from sqlalchemy.sql.expression import func
 
 from starmap import generator, map
-from starmap.models import db, Subsector
+from starmap.models import db, Subsector, World
 
 
 app = Flask(__name__)
@@ -29,6 +38,55 @@ def new_subsector():
     """
     subsector = create_subsector()
     return make_response(jsonify(subsector.to_json()), 201)
+
+
+@app.route("/search/")
+def search():
+    """
+    Does a search of worlds and subsectors.
+    """
+    results = []
+
+    query = request.args.get('q', '').strip()
+    if not query:
+        abort(400)
+
+    query = query + '%'
+
+    subsectors = (
+        Subsector.query
+        .filter(Subsector.name.ilike(query))
+        .order_by(Subsector.name)
+        .limit(6)
+    )
+
+    for subsector in subsectors:
+        results.append({
+            'subsector': {
+                'id': subsector.id,
+                'name': subsector.name,
+            },
+            'world': None,
+        })
+
+    worlds = (
+        World.query
+        .options(joinedload(World.subsector))
+        .filter(World.name.ilike(query))
+        .order_by(World.name)
+        .limit(6)
+    )
+
+    for world in worlds:
+        results.append({
+            'subsector': {
+                'id': world.subsector.id,
+                'name': world.subsector.name,
+            },
+            'world': world.to_json(),
+        })
+
+    return jsonify({'results': results})
 
 
 @app.route("/random/")
@@ -94,6 +152,7 @@ def download_csv(id):
     for world in subsector.worlds:
 
         writer.writerow([
+            world.name,
             world.coords_desc,
             world.uwp,
             world.starport,
@@ -115,9 +174,8 @@ def download_csv(id):
             yesno(world.is_consulate),
         ])
 
-    fp.seek(0)
     return send_file(
-        fp,
+        io.BytesIO(fp.getvalue().encode()),
         mimetype='text/csv',
         as_attachment=True,
         attachment_filename='subsector.csv',
