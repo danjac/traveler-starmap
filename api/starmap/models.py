@@ -83,6 +83,14 @@ class Subsector(db.Model):
         lazy='dynamic',
     )
 
+    def to_json(self):
+        worlds_json = [w.to_json() for w in self.worlds]
+        return {
+            'id': self.id,
+            'name': self.name,
+            'worlds': worlds_json,
+        }
+
 
 class World(db.Model):
 
@@ -106,6 +114,8 @@ class World(db.Model):
     temperature = db.Column(db.Integer, nullable=False)
 
     population = db.Column(db.Integer, nullable=False)
+    exact_population = db.Column(db.BigInteger, nullable=False)
+
     government = db.Column(db.Integer, nullable=False)
     law_level = db.Column(db.Integer, nullable=False)
     tech_level = db.Column(db.Integer, nullable=False)
@@ -124,6 +134,30 @@ class World(db.Model):
 
     def __repr__(self):
         return "<%s>" % self
+
+    def to_json(self):
+        return {
+            'id': self.id,
+            'coords': self.coords_desc,
+            'uwp': self.uwp,
+            'starport': self.starport,
+            'size': self.size_desc,
+            'atmosphere': self.atmosphere_desc,
+            'hydrographics': self.hydrographics_desc,
+            'temperature': self.temperature_desc,
+            'population': self.population_desc,
+            'government': self.government_desc,
+            'law_level': self.law_level_desc,
+            'tech_level': self.tech_level,
+            'short_trade_codes': self.short_trade_classifications,
+            'long_trade_codes': self.long_trade_classifications,
+            'is_naval_base': self.is_naval_base,
+            'is_scout_base': self.is_scout_base,
+            'is_research_base': self.is_research_base,
+            'is_pirate_base': self.is_pirate_base,
+            'is_tas': self.is_tas,
+            'is_consulate': self.is_consulate,
+        }
 
     @hybrid_property
     def coordinates(self):

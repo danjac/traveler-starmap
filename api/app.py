@@ -1,14 +1,13 @@
 import io
 
 from flask import Flask, send_file, jsonify, make_response
-from flask_restful import Resource, Api
+from sqlalchemy.sql.expression import func
 
 from starmap import generator, map
 from starmap.models import db, Subsector
 
 
 app = Flask(__name__)
-api = Api(app)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/starmap.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
@@ -16,89 +15,64 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 db.init_app(app)
 
 
-class SubsectorList(Resource):
+def create_subsector():
+    # names file should be arg/setting
+    subsector = generator.generate_subsector('./names.txt')
 
-    def post(self):
-        """
-        Generate subsector, store in database
-        Should return subsector details
-
-        We need some limit on the number of subectors
-        """
-        subsector = generator.generate_subsector('./names.txt')
-
-        worlds = [
-            dict(
-                name=w.name,
-                uwp=w.uwp,
-                notes=w.short_trade_classifications,
-                bases=w.base_codes,
-            ) for w in subsector.worlds
-        ]
-
-        db.session.add(subsector)
-        db.session.commit()
-
-        return make_response(jsonify({
-            'worlds': worlds,
-            'subsector': {
-                'id': subsector.id,
-                'name': subsector.name,
-            },
-        }), 201)
-
-    def get(self):
-        """
-        Return list of subsectors
-        """
-        subsectors = [
-            dict(
-                id=s.id,
-                name=s.name
-            ) for s in Subsector.query.all()
-        ]
-        return jsonify({'subsectors': subsectors})
+    db.session.add(subsector)
+    db.session.commit()
+    return subsector
 
 
-class SubsectorDetail(Resource):
+@app.route("/", methods=['POST'])
+def new_subsector():
+    """
+    Generate subsector, store in database
+    Should return subsector details
 
-    def get(self, id):
-        """
-        Return list of subsectors
-        Also: CSV option, long/short format
-        """
-        subsector = Subsector.query.get_or_404(id)
-        worlds = [dict(
-            name=w.name,
-            uwp=w.uwp,
-            notes=w.short_trade_classifications,
-            bases=w.base_codes,
-            coords=w.coords_desc,
-            ) for w in subsector.worlds]
-        return jsonify({
-            'worlds': worlds,
-            'subsector': {
-                'id': subsector.id,
-                'name': subsector.name,
-            },
-        })
+    We need some limit on the number of subectors
+    """
+    subsector = create_subsector()
+    return make_response(jsonify(subsector.to_json()), 201)
 
 
-class MapDetail(Resource):
+@app.route("/random/")
+def get_random_subsector():
+    """
+    Returns a random subsector. If no subsectors exist yet,
+    then creates a new subsector and returns that.
+    """
 
-    def get(self, id):
-        """
-        Returns map as a PNG
-        """
-        fp = io.BytesIO()
-        subsector = Subsector.query.get_or_404(id)
-        map.draw_map(fp, subsector.worlds)
-        fp.seek(0)
-        return send_file(fp, mimetype='image/png')
+    status_code = 200
+    subsector = Subsector.query.order_by(func.random()).first()
 
-api.add_resource(SubsectorList, "/subsectors/")
-api.add_resource(SubsectorDetail, "/subsector/<int:id>/")
-api.add_resource(MapDetail, "/map/<int:id>/")
+    if subsector is None:
+        subsector = create_subsector()
+        status_code = 201
+
+    return make_response(jsonify(subsector.to_json()), status_code)
+
+
+@app.route("/<int:id>/")
+def get_subsector_detail(id):
+    """
+    Returns details for specific subsector
+    If format=csv then return details CSV download
+    """
+    subsector = Subsector.query.get_or_404(id)
+    return jsonify(subsector.to_json())
+
+
+@app.route("/<int:id>/map/")
+def download_map(id):
+    """
+    Download map as a PNG
+    """
+    fp = io.BytesIO()
+    subsector = Subsector.query.get_or_404(id)
+    map.draw_map(fp, subsector.worlds)
+    fp.seek(0)
+    return send_file(fp, mimetype='image/png')
 
 
 if __name__ == "__main__":
