@@ -12,21 +12,24 @@ const starmap = require('../starmap.png');
 const worlds = [
   {
     name: 'Meresankh',
-    coords: '0101',
+    starport: 'C',
+    coords: '0208',
     uwp: 'C849BBA-C',
     bases: '',
     notes: 'Hi In',
   },
   {
     name: 'Ushkhakegasas',
-    coords: '0107',
+    starport: 'C',
+    coords: '0101',
     uwp: 'CA365BBA-D',
     bases: 'N T I',
     notes: 'Hi',
   },
   {
     name: 'Aszagin',
-    coords: '0401',
+    starport: 'F',
+    coords: '0602',
     uwp: 'E242358-7',
     bases: '',
     notes: 'Lo Na Po',
@@ -38,8 +41,9 @@ class App extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = { rotation: 0 };
+    this.state = { worlds: worlds };
 //this.tick = this.tick.bind(this);
+    this.onSelectWorld = this.onSelectWorld.bind(this);
   }
 
   componentDidMount() {
@@ -51,8 +55,23 @@ class App extends React.Component {
     window.requestAnimationFrame(this.tick);
   }
 
+  onSelectWorld(world) {
+    const worlds = this.state.worlds;
+
+    for (let i = 0; i < worlds.length; i++) {
+      if (world.coords === worlds[i].coords) {
+        worlds[i].selected = true;
+      } else {
+        worlds[i].selected = false;
+      }
+    }
+    this.setState({ worlds });
+  }
+
   render() {
     console.log("rendering....");
+    const selectWorld = world => () => this.onSelectWorld(world);
+
     return (
       <bs.Grid>
         <h2>Subsector Merenga</h2>
@@ -92,8 +111,11 @@ class App extends React.Component {
                 </tr>
               </thead>
               <tbody>
-              {worlds.map((w) => (
-                <tr key={w.coords}>
+              {this.state.worlds.map((w) => (
+              <tr key={w.coords}
+                  className={w.selected ? 'info' : ''}
+                  onClick={selectWorld(w)}
+              >
                   <td>{w.coords}</td>
                   <td>{w.name}</td>
                   <td>{w.uwp}</td>
@@ -105,7 +127,7 @@ class App extends React.Component {
             </table>
           </bs.Col>
           <bs.Col md={4}>
-            <Starmap />
+            <Starmap worlds={this.state.worlds} onSelectWorld={this.onSelectWorld} />
           </bs.Col>
         </bs.Row>
       </bs.Grid>

@@ -2,11 +2,10 @@ import React, { PropTypes } from 'react';
 import ReactDOM from 'react-dom';
 
 
-//const HEIGHT = 91.14378277661477;
-//const WIDTH = 91.14378277661477;
-//const SIDE = 50.0;
 const HEIGHT = 51.96152422706631;
 const WIDTH = 51.96152422706631;
+const MAP_HEIGHT = 520;
+const MAP_WIDTH = 360;
 const SIDE = 30.0;
 
 
@@ -18,6 +17,18 @@ function pad(num) {
   return s;
 }
 
+function makeHexId(col, row) {
+  const firstDigit = col + 1;
+  let secondDigit = row;
+
+  if (col % 2 === 0) {
+    secondDigit = (row / 2) + 1;
+  } else {
+    secondDigit = ((row - (row % 2)) / 2) + 1;
+  }
+
+  return pad(firstDigit) + pad(secondDigit);
+}
 
 class Point {
   constructor(x, y) {
@@ -27,7 +38,10 @@ class Point {
 }
 
 class Hexagon {
-  constructor(row, col, x, y) {
+  constructor(id, world, x, y) {
+    this.id = id;
+    this.world = world;
+
     const x1 = (WIDTH - SIDE) / 2;
     const y1 = HEIGHT / 2;
 
@@ -39,17 +53,6 @@ class Hexagon {
       new Point(x1 + x, HEIGHT + y),
       new Point(x, y1 + y),
     ];
-
-    const firstDigit = col + 1;
-    let secondDigit = row;
-
-    if (col % 2 === 0) {
-      secondDigit = (row / 2) + 1;
-    } else {
-      secondDigit = ((row - (row % 2)) / 2) + 1;
-    }
-
-    this.id = pad(firstDigit) + pad(secondDigit);
 
     this.x = x;
     this.y = y;
@@ -78,81 +81,90 @@ class Hexagon {
       ctx.lineTo(point.x, point.y);
     }
     ctx.closePath();
+    if (this.world && this.world.selected) {
+      ctx.fillStyle = '#D9EDF7';
+      ctx.fill();
+    }
     ctx.stroke();
+
     // add text. Right now just coordinates
     ctx.fillStyle = 'black';
     ctx.font = 'bolder 6pt Trebuchet MS,Tahoma,Verdana,Arial,sans-serif';
     ctx.textAlign = 'center';
     ctx.textBaseLine = 'middle';
     ctx.fillText(this.id, this.middle.x, this.middle.y - 10);
+
+    if (this.world) {
+      ctx.beginPath();
+      ctx.fillText(this.world.starport, this.middle.x, this.middle.y);
+      ctx.arc(this.middle.x, this.middle.y + 10, 5, 2 * Math.PI, false);
+      // we'll make some amber/red later
+      ctx.fillStyle = 'green';
+      ctx.fill();
+      ctx.lineWidth = 0.5;
+      ctx.strokeStyle = '#003300';
+      ctx.closePath();
+      ctx.stroke();
+    }
   }
 }
 
 
-class Grid {
-  // this will take a list of worlds at some point
-  // from this we can add the specific data
-  constructor(width, height) {
-    this.hexes = [];
-    // fast look up by x/y coords
-    this.hexesDict = {};
+function createHexes(worlds) {
+  const hexes = [];
+  const worldsDict = {};
 
-    let row = 0;
-    let y = 0.0;
+  worlds.forEach(world => worldsDict[world.coords] = world);
 
-    while (y + HEIGHT <= height) {
-      let col = 0;
-      let offset = 0.0;
-      if (row % 2 === 1) {
-        offset = (WIDTH - SIDE) / 2 + SIDE;
-        col = 1;
-      }
-      let x = offset;
-      while (x + WIDTH <= width) {
-        const hex = new Hexagon(row, col, x, y);
-        this.hexes.push(hex);
-        this.hexesDict[hex.id] = hex;
-        col += 2;
-        x += WIDTH + SIDE;
-      }
-      row++;
-      y += HEIGHT / 2;
+  let row = 0;
+  let y = 0.0;
+
+  while (y + HEIGHT <= MAP_HEIGHT) {
+    let col = 0;
+    let offset = 0.0;
+    if (row % 2 === 1) {
+      offset = (WIDTH - SIDE) / 2 + SIDE;
+      col = 1;
     }
-  }
-  draw(ctx) {
-    ctx.clearRect(0, 0, 360, 550);
-    this.hexes.forEach(hex => hex.draw(ctx));
-  }
+    let x = offset;
+    while (x + WIDTH <= MAP_WIDTH) {
+      const hexId = makeHexId(col, row);
+      const world = worldsDict[hexId];
+      const hex = new Hexagon(hexId, world, x, y);
 
-  getHexByXY(x, y) {
-    for (let i = 0; i < this.hexes.length; i++) {
-      const hex = this.hexes[i];
-      if (hex.contains(x, y)) {
-        return hex;
-      }
+      hexes.push(hex);
+      col += 2;
+      x += WIDTH + SIDE;
     }
-    return null;
+    row++;
+    y += HEIGHT / 2;
   }
+  return hexes;
 }
+
 
 class Starmap extends React.Component {
 
   constructor(props) {
     super(props);
     this.onClick = this.onClick.bind(this);
-    this.grid = new Grid(360, 560);
+    this.state = {
+      hexes: createHexes(this.props.worlds),
+    };
   }
 
   componentDidMount() {
-    this.paint(this.getDOMNode().getContext('2d'));
+    this.paint();
+  }
+
+  componentWillReceiveProps(nextProps) {
+    this.setState({
+      hexes: createHexes(nextProps.worlds),
+    });
   }
 
   componentDidUpdate() {
-    const ctx = this.getDOMNode().getContext('2d');
-    this.paint(ctx);
-  }
-  getDOMNode() {
-    return ReactDOM.findDOMNode(this);
+    this.paint();
   }
 
   onClick(event) {
@@ -169,11 +181,33 @@ class Starmap extends React.Component {
     const x = event.pageX - totalOffsetX - document.body.scrollLeft;
     const y = event.pageY - totalOffsetY - document.body.scrollTop;
 
-    console.log(this.grid.getHexByXY(x, y));
+    const hex = this.getHexByXY(x, y);
+    if (hex && hex.world) {
+      this.props.onSelectWorld(hex.world);
+    }
   }
 
-  paint(ctx) {
-    this.grid.draw(ctx);
+  getHexByXY(x, y) {
+    for (let i = 0; i < this.state.hexes.length; i++) {
+      const hex = this.state.hexes[i];
+      if (hex.contains(x, y)) {
+        return hex;
+      }
+    }
+    return null;
+  }
+
+  getDOMNode() {
+    return ReactDOM.findDOMNode(this);
+  }
+
+  paint() {
+    const canvas = this.getDOMNode();
+    const ctx = canvas.getContext('2d');
+    ctx.save();
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    this.state.hexes.forEach(hex => hex.draw(ctx));
+    ctx.restore();
   }
 
   render() {
@@ -183,6 +217,8 @@ class Starmap extends React.Component {
 }
 
 Starmap.propTypes = {
+  worlds: PropTypes.array.isRequired,
+  onSelectWorld: PropTypes.func.isRequired,
 };
 
 export default Starmap;
