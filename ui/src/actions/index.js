@@ -38,11 +38,8 @@ const fetchSubsector = (apiCall, world) => {
 
 
 export function search(query) {
-  if (!query) {
-    return;
-  }
   return dispatch => {
-    dispatch({ type: 'SEARCH_RESULTS_REQUEST' });
+    dispatch({ type: 'SEARCH_RESULTS_REQUEST', payload: query });
     fetch(API_URL + 'search?q=' + query)
     .then(result => {
       result.json()
@@ -61,6 +58,11 @@ export function search(query) {
   };
 }
 
+export function clearSearch() {
+  return {
+    type: 'CLEAR_SEARCH',
+  };
+}
 export function getRandomSubsector() {
   return fetchSubsector(fetch(API_URL + 'random/'));
 }
@@ -74,6 +76,9 @@ export function newSubsector() {
 }
 
 export function jumpTo(searchResult) {
-  const apiCall = fetch(API_URL + searchResult.subsector.id + '/');
-  return fetchSubsector(apiCall, searchResult.world);
+  return dispatch => {
+    dispatch(clearSearch());
+    const apiCall = fetch(API_URL + searchResult.subsector.id + '/');
+    dispatch(fetchSubsector(apiCall, searchResult.world));
+  };
 }

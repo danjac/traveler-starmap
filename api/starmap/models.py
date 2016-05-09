@@ -229,7 +229,7 @@ class World(db.Model):
             if getattr(self, attr):
                 trade_cls.append(code)
 
-        return " ".join(trade_cls)
+        return ", ".join(trade_cls)
 
     @property
     def is_agricultural(self):

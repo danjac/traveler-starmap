@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react';
-import Select from 'react-select';
+import Autosuggest from 'react-autosuggest';
 import { connect } from 'react-redux';
 import * as bs from 'react-bootstrap';
 import * as actions from '../actions';
@@ -8,15 +8,36 @@ import Starmap from './starmap';
 
 require('bootstrap/dist/css/bootstrap.min.css');
 require('bootstrap/dist/css/bootstrap-theme.min.css');
-require('react-select/dist/react-select.min.css');
+require('./autosuggest.css');
 
 
 const Search = props => {
-  const optionRenderer = option => {
-    if (option.world) {
-      return `${option.world.name}/${option.subsector.name}`;
+  const getSuggestionValue = suggestion => {
+    return suggestion;
+  };
+
+  const renderSuggestion = suggestion => {
+    let name;
+    if (suggestion.world) {
+      name = `${suggestion.world.name}/${suggestion.subsector.name}`;
+    } else {
+      name = `${suggestion.subsector.name} Subsector`;
     }
-    return `${option.subsector.name} Subsector`;
+    return <span>{name}</span>;
+  };
+
+  const onSuggestionSelected = (event, { suggestionValue }) => {
+    props.onSearchSelect(suggestionValue);
+  };
+
+  const onChange = (event, { newValue }) => {
+    if (newValue) {
+      props.onSearch(newValue);
+    }
+  };
+
+  const shouldRenderSuggestions = () => {
+    return props.searchResults.length > 0;
   };
 
   return (
@@ -25,17 +46,18 @@ const Search = props => {
         <bs.InputGroup.Addon>
           <bs.Glyphicon glyph="search" />
         </bs.InputGroup.Addon>
-        <Select
-          name="search"
-          autoload
-          clearable
-          placeholder="Search world or subsector..."
-          cache={false}
-          isLoading={props.isSearchLoading}
-          options={props.searchResults}
-          optionRenderer={optionRenderer}
-          onInputChange={props.onSearch}
-          onChange={props.onSearchSelect}
+        <Autosuggest
+          inputProps={{
+            onChange,
+            placeholder: 'Find subsector or world...',
+            className: 'form-control',
+            value: props.searchQuery,
+          }}
+          suggestions={props.searchResults}
+          shouldRenderSuggestions={shouldRenderSuggestions}
+          renderSuggestion={renderSuggestion}
+          getSuggestionValue={getSuggestionValue}
+          onSuggestionSelected={onSuggestionSelected}
         />
       </bs.InputGroup>
       <bs.FormControl.Feedback />
@@ -47,6 +69,7 @@ Search.propTypes = {
   onSearch: PropTypes.func.isRequired,
   onSearchSelect: PropTypes.func.isRequired,
   isSearchLoading: PropTypes.bool,
+  searchQuery: PropTypes.string,
   searchResults: PropTypes.array,
 };
 
@@ -154,6 +177,7 @@ class App extends React.Component {
       subsector,
       selected,
       searchResults,
+      searchQuery,
       onSearch,
       onSearchSelect,
       onSelectWorld,
@@ -194,6 +218,7 @@ class App extends React.Component {
           <bs.Col md={4}>
             <Search
               searchResults={searchResults}
+              searchQuery={searchQuery}
               onSearchSelect={onSearchSelect}
               onSearch={onSearch}
             />
@@ -219,6 +244,7 @@ App.propTypes = {
   selected: PropTypes.object,
   subsector: PropTypes.object,
   searchResults: PropTypes.array,
+  searchQuery: PropTypes.string,
   isSearchLoading: PropTypes.bool,
   onSearch: PropTypes.func.isRequired,
   onSearchSelect: PropTypes.func.isRequired,

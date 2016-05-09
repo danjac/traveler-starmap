@@ -2,7 +2,7 @@ const initialState = {
   subsector: null,
   selected: null,
   searchResults: [],
-  isSearchLoading: false,
+  searchQuery: '',
 };
 
 export default function (state = initialState, action) {
@@ -15,15 +15,19 @@ export default function (state = initialState, action) {
       return Object.assign({}, state, {
         subsector: action.payload,
       });
+    case 'CLEAR_SEARCH':
+      return Object.assign({}, state, {
+        searchResults: [],
+        searchQuery: '',
+      });
     case 'SEARCH_RESULTS_REQUEST':
       return Object.assign({}, state, {
-//searchResults: [],
-        isSearchLoading: true,
+        searchResults: [],
+        searchQuery: action.payload,
       });
     case 'SEARCH_RESULTS_SUCCESS':
       return Object.assign({}, state, {
         searchResults: action.payload,
-        isSearchLoading: false,
       });
     default:
       return state;
