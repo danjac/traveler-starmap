@@ -26,12 +26,14 @@ const Search = props => {
     return <span>{name}</span>;
   };
 
-  const onSuggestionSelected = (event, { suggestionValue }) => {
-    props.onSearchSelect(suggestionValue);
+  const onSuggestionSelected = (event, { suggestion }) => {
+    if (typeof suggestion === 'object') {
+      props.onSearchSelect(suggestion);
+    }
   };
 
   const onChange = (event, { newValue }) => {
-    if (newValue) {
+    if (newValue && typeof newValue === 'string') {
       props.onSearch(newValue);
     }
   };
