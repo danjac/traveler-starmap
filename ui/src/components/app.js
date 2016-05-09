@@ -255,11 +255,12 @@ App.propTypes = {
 
 
 const mapStateToProps = state => {
-  const { subsector, selected, searchResults } = state;
+  const { subsector, selected, searchResults, searchQuery } = state;
   return {
     subsector,
     selected,
     searchResults,
+    searchQuery,
   };
 };
 
