@@ -81,6 +81,7 @@ class Subsector(db.Model):
         'World',
         backref='subsector',
         lazy='dynamic',
+        order_by='World.x_coord,World.y_coord',
     )
 
     def to_json(self):
@@ -120,6 +121,7 @@ class World(db.Model):
     law_level = db.Column(db.Integer, nullable=False)
     tech_level = db.Column(db.Integer, nullable=False)
 
+    is_gas_giant = db.Column(db.Boolean, default=False)
     is_naval_base = db.Column(db.Boolean, default=False)
     is_scout_base = db.Column(db.Boolean, default=False)
     is_research_base = db.Column(db.Boolean, default=False)
@@ -138,6 +140,7 @@ class World(db.Model):
     def to_json(self):
         return {
             'id': self.id,
+            'name': self.name,
             'coords': self.coords_desc,
             'uwp': self.uwp,
             'starport': self.starport,
@@ -151,6 +154,7 @@ class World(db.Model):
             'tech_level': self.tech_level,
             'short_trade_codes': self.short_trade_classifications,
             'long_trade_codes': self.long_trade_classifications,
+            'is_gas_giant': self.is_gas_giant,
             'is_naval_base': self.is_naval_base,
             'is_scout_base': self.is_scout_base,
             'is_research_base': self.is_research_base,

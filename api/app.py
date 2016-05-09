@@ -1,6 +1,8 @@
 import io
 
 from flask import Flask, send_file, jsonify, make_response
+from flask_cors import CORS
+
 from sqlalchemy.sql.expression import func
 
 from starmap import generator, map
@@ -8,6 +10,7 @@ from starmap.models import db, Subsector
 
 
 app = Flask(__name__)
+CORS(app)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/starmap.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True

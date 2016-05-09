@@ -1,37 +1,12 @@
 import React, { PropTypes } from 'react';
+import { connect } from 'react-redux';
 import * as bs from 'react-bootstrap';
+import * as actions from '../actions';
 
 import Starmap from './starmap';
 
 require('bootstrap/dist/css/bootstrap.min.css');
 require('bootstrap/dist/css/bootstrap-theme.min.css');
-
-const worlds = [
-  {
-    name: 'Meresankh',
-    starport: 'C',
-    coords: '0208',
-    uwp: 'C849BBA-C',
-    bases: '',
-    notes: 'Hi In',
-  },
-  {
-    name: 'Ushkhakegasas',
-    starport: 'C',
-    coords: '0101',
-    uwp: 'CA365BBA-D',
-    bases: 'N T I',
-    notes: 'Hi',
-  },
-  {
-    name: 'Aszagin',
-    starport: 'F',
-    coords: '0602',
-    uwp: 'E242358-7',
-    bases: '',
-    notes: 'Lo Na Po',
-  },
-];
 
 
 const WorldDetail = props => {
@@ -60,41 +35,41 @@ const WorldDetail = props => {
         <dt>Starport</dt>
         <dd>{world.starport}</dd>
         <dt>Size</dt>
-        <dd>10,000km</dd>
+        <dd>{world.size}</dd>
         <dt>Atmosphere</dt>
-        <dd>Standard</dd>
+        <dd>{world.atmosphere}</dd>
         <dt>Hydrographics</dt>
-        <dd>60%</dd>
+        <dd>{world.hydrographics}</dd>
         <dt>Temperature</dt>
-        <dd>Temperate</dd>
+        <dd>{world.temperature}</dd>
         <dt>Population</dt>
-        <dd>1,000,000</dd>
+        <dd>{world.population}</dd>
         <dt>Government</dt>
-        <dd>Feudal technocracy</dd>
+        <dd>{world.government}</dd>
         <dt>Law level</dt>
-        <dd>Shotguns prohibited</dd>
+        <dd>{world.law_level}</dd>
         <dt>Tech level</dt>
-        <dd>16</dd>
+        <dd>{world.tech_level}</dd>
         <dt>Notes</dt>
-        <dd>Rich, Agricultural</dd>
+        <dd>{world.long_trade_codes}</dd>
       </dl>
       <h4>Bases and facilities</h4>
       <table className="table table-condensed table-striped">
         <tbody>
           <tr><td>Gas giants</td>
-          <td><input type="radio" readOnly checked /></td></tr>
+          <td><input type="radio" readOnly checked={world.is_gas_giant} /></td></tr>
           <tr><td>Naval base</td>
-          <td><input type="radio" readOnly checked /></td></tr>
+          <td><input type="radio" readOnly checked={world.is_naval_base} /></td></tr>
           <tr><td>Scout base</td>
-          <td><input type="radio" readOnly checked /></td></tr>
+          <td><input type="radio" readOnly checked={world.is_scout_base} /></td></tr>
           <tr><td>Research base</td>
-          <td><input type="radio" readOnly checked /></td></tr>
+          <td><input type="radio" readOnly checked={world.is_research_base} /></td></tr>
           <tr><td>Pirate base</td>
-          <td><input type="radio" readOnly checked /></td></tr>
+          <td><input type="radio" readOnly checked={world.is_pirate_base} /></td></tr>
           <tr><td>Traveler's Aid Society</td>
-          <td><input type="radio" readOnly checked /></td></tr>
+          <td><input type="radio" readOnly checked={world.is_tas} /></td></tr>
           <tr><td>Imperial Consulate</td>
-          <td><input type="radio" readOnly checked /></td></tr>
+          <td><input type="radio" readOnly checked={world.is_consulate} /></td></tr>
         </tbody>
       </table>
     </bs.Panel>
@@ -108,7 +83,7 @@ WorldDetail.propTypes = {
 
 
 const WorldList = (props) => {
-  const selectWorld = world => () => {
+  const onSelectWorld = world => () => {
     props.onSelectWorld(world);
   };
 
@@ -119,18 +94,16 @@ const WorldList = (props) => {
           <th>Coords</th>
           <th>Name</th>
           <th>UWP</th>
-          <th>Bases</th>
           <th>Notes</th>
         </tr>
       </thead>
       <tbody>
       {props.worlds.map((w) => (
-      <tr key={w.coords} onClick={selectWorld(w)}>
+      <tr key={w.coords} onClick={onSelectWorld(w)}>
           <td>{w.coords}</td>
           <td>{w.name}</td>
           <td>{w.uwp}</td>
-          <td>{w.bases}</td>
-          <td>{w.notes}</td>
+          <td>{w.short_trade_codes}</td>
         </tr>
         ))}
       </tbody>
@@ -145,31 +118,30 @@ WorldList.propTypes = {
 
 class App extends React.Component {
 
-  constructor(props) {
-    super(props);
-    this.state = { worlds, selected: null };
-    this.onSelectWorld = this.onSelectWorld.bind(this);
-    this.onSelectAll = this.onSelectAll.bind(this);
-  }
-
-  onSelectAll() {
-    this.onSelectWorld(null);
-  }
-
-  onSelectWorld(world) {
-    this.setState({ selected: world });
-  }
-
   render() {
-    const { worlds, selected } = this.state;
+    const {
+      subsector,
+      selected,
+      onSelectWorld,
+      onNewSubsector,
+      onSelectAll,
+    } = this.props;
+
+    if (!subsector) {
+      return <div>No subsector selected</div>;
+    }
+
+    const { worlds } = subsector;
 
     return (
       <bs.Grid>
-        <h2>Subsector Merenga</h2>
+        <h2>Subsector {subsector.name}</h2>
         <bs.Row>
           <bs.Col md={8}>
             <bs.ButtonGroup>
-              <bs.Button><bs.Glyphicon glyph="star" /> New subsector</bs.Button>
+              <bs.Button onClick={onNewSubsector}>
+                <bs.Glyphicon glyph="star" /> New subsector
+              </bs.Button>
               <bs.Button><bs.Glyphicon glyph="download" /> Download CSV</bs.Button>
               <bs.Button><bs.Glyphicon glyph="download" /> Download map (PNG)</bs.Button>
             </bs.ButtonGroup>
@@ -192,12 +164,12 @@ class App extends React.Component {
         <bs.Row>
           <bs.Col md={8}>
             {selected ?
-            <WorldDetail world={selected} onSelectAll={this.onSelectAll}/> :
-            <WorldList worlds={worlds} onSelectWorld={this.onSelectWorld} />
+            <WorldDetail world={selected} onSelectAll={onSelectAll}/> :
+            <WorldList worlds={worlds} onSelectWorld={onSelectWorld} />
             }
           </bs.Col>
           <bs.Col md={4}>
-            <Starmap worlds={worlds} selected={selected} onSelectWorld={this.onSelectWorld} />
+            <Starmap worlds={worlds} selected={selected} onSelectWorld={onSelectWorld} />
           </bs.Col>
         </bs.Row>
       </bs.Grid>
@@ -205,4 +177,39 @@ class App extends React.Component {
   }
 }
 
-export default App;
+App.propTypes = {
+  selected: PropTypes.object,
+  subsector: PropTypes.object,
+  onSelectAll: PropTypes.func.isRequired,
+  onSelectWorld: PropTypes.func.isRequired,
+  onNewSubsector: PropTypes.func.isRequired,
+};
+
+
+const mapStateToProps = state => {
+  const { subsector, selected } = state;
+  return {
+    subsector,
+    selected,
+  };
+};
+
+
+const mapDispatchToProps = dispatch => {
+  return {
+    onSelectAll() {
+      dispatch(actions.selectWorld(null));
+    },
+    onSelectWorld(world) {
+      dispatch(actions.selectWorld(world));
+    },
+    onNewSubsector() {
+      dispatch(actions.newSubsector());
+    },
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(App);
