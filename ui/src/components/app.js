@@ -1,13 +1,10 @@
 import React, { PropTypes } from 'react';
-import ReactDOM from 'react-dom';
 import * as bs from 'react-bootstrap';
 
 import Starmap from './starmap';
 
 require('bootstrap/dist/css/bootstrap.min.css');
 require('bootstrap/dist/css/bootstrap-theme.min.css');
-
-const starmap = require('../starmap.png');
 
 const worlds = [
   {
@@ -37,41 +34,148 @@ const worlds = [
 ];
 
 
+const WorldDetail = props => {
+  const { world } = props;
+
+  const header = (
+    <bs.Grid fluid>
+      <bs.Row>
+        <bs.Col md={9}><h3>{world.name}</h3></bs.Col>
+        <bs.Col md={3}>
+          <bs.Button onClick={props.onSelectAll}>
+            <bs.Glyphicon glyph="list" /> View all
+          </bs.Button>
+        </bs.Col>
+      </bs.Row>
+    </bs.Grid>
+  );
+
+  return (
+    <bs.Panel header={header}>
+      <dl className="dl-horizontal">
+        <dt>Coordinates</dt>
+        <dd>{world.coords}</dd>
+        <dt>UWP</dt>
+        <dd>{world.uwp}</dd>
+        <dt>Starport</dt>
+        <dd>{world.starport}</dd>
+        <dt>Size</dt>
+        <dd>10,000km</dd>
+        <dt>Atmosphere</dt>
+        <dd>Standard</dd>
+        <dt>Hydrographics</dt>
+        <dd>60%</dd>
+        <dt>Temperature</dt>
+        <dd>Temperate</dd>
+        <dt>Population</dt>
+        <dd>1,000,000</dd>
+        <dt>Government</dt>
+        <dd>Feudal technocracy</dd>
+        <dt>Law level</dt>
+        <dd>Shotguns prohibited</dd>
+        <dt>Tech level</dt>
+        <dd>16</dd>
+        <dt>Notes</dt>
+        <dd>Rich, Agricultural</dd>
+      </dl>
+      <h4>Bases and facilities</h4>
+      <table className="table table-condensed table-striped">
+        <tbody>
+          <tr><td>Gas giants</td>
+          <td><input type="radio" readOnly checked /></td></tr>
+          <tr><td>Naval base</td>
+          <td><input type="radio" readOnly checked /></td></tr>
+          <tr><td>Scout base</td>
+          <td><input type="radio" readOnly checked /></td></tr>
+          <tr><td>Research base</td>
+          <td><input type="radio" readOnly checked /></td></tr>
+          <tr><td>Pirate base</td>
+          <td><input type="radio" readOnly checked /></td></tr>
+          <tr><td>Traveler's Aid Society</td>
+          <td><input type="radio" readOnly checked /></td></tr>
+          <tr><td>Imperial Consulate</td>
+          <td><input type="radio" readOnly checked /></td></tr>
+        </tbody>
+      </table>
+    </bs.Panel>
+  );
+};
+
+WorldDetail.propTypes = {
+  world: PropTypes.object.isRequired,
+  onSelectAll: PropTypes.func.isRequired,
+};
+
+
+const WorldList = (props) => {
+  const selectWorld = world => () => {
+    props.onSelectWorld(world);
+  };
+
+  return (
+    <table className="table table-striped table-condensed table-hover">
+      <thead>
+        <tr>
+          <th>Coords</th>
+          <th>Name</th>
+          <th>UWP</th>
+          <th>Bases</th>
+          <th>Notes</th>
+        </tr>
+      </thead>
+      <tbody>
+      {props.worlds.map((w) => (
+      <tr
+        key={w.coords}
+        className={w.selected ? 'info' : ''}
+        onClick={selectWorld(w)}
+      >
+          <td>{w.coords}</td>
+          <td>{w.name}</td>
+          <td>{w.uwp}</td>
+          <td>{w.bases}</td>
+          <td>{w.notes}</td>
+        </tr>
+        ))}
+      </tbody>
+    </table>
+  );
+};
+
+WorldList.propTypes = {
+  onSelectWorld: PropTypes.func.isRequired,
+  worlds: PropTypes.array.isRequired,
+};
+
 class App extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = { worlds: worlds };
-//this.tick = this.tick.bind(this);
+    this.state = { worlds, selected: null };
     this.onSelectWorld = this.onSelectWorld.bind(this);
+    this.onSelectAll = this.onSelectAll.bind(this);
   }
 
-  componentDidMount() {
-//window.requestAnimationFrame(this.tick);
-  }
-
-  tick() {
-    this.setState({ rotation: this.state.rotation + 0.1 });
-    window.requestAnimationFrame(this.tick);
+  onSelectAll() {
+    this.onSelectWorld(null);
   }
 
   onSelectWorld(world) {
     const worlds = this.state.worlds;
+    let selected = null;
 
     for (let i = 0; i < worlds.length; i++) {
-      if (world.coords === worlds[i].coords) {
+      if (world && world.coords === worlds[i].coords) {
         worlds[i].selected = true;
+        selected = world;
       } else {
         worlds[i].selected = false;
       }
     }
-    this.setState({ worlds });
+    this.setState({ worlds, selected });
   }
 
   render() {
-    console.log("rendering....");
-    const selectWorld = world => () => this.onSelectWorld(world);
-
     return (
       <bs.Grid>
         <h2>Subsector Merenga</h2>
@@ -100,31 +204,10 @@ class App extends React.Component {
         </bs.Row>
         <bs.Row>
           <bs.Col md={8}>
-            <table className="table table-striped table-condensed table-hover">
-              <thead>
-                <tr>
-                  <th>Coords</th>
-                  <th>Name</th>
-                  <th>UWP</th>
-                  <th>Bases</th>
-                  <th>Notes</th>
-                </tr>
-              </thead>
-              <tbody>
-              {this.state.worlds.map((w) => (
-              <tr key={w.coords}
-                  className={w.selected ? 'info' : ''}
-                  onClick={selectWorld(w)}
-              >
-                  <td>{w.coords}</td>
-                  <td>{w.name}</td>
-                  <td>{w.uwp}</td>
-                  <td>{w.bases}</td>
-                  <td>{w.notes}</td>
-                </tr>
-                ))}
-              </tbody>
-            </table>
+            {this.state.selected ?
+            <WorldDetail world={this.state.selected} onSelectAll={this.onSelectAll}/> :
+            <WorldList worlds={this.state.worlds} onSelectWorld={this.onSelectWorld} />
+            }
           </bs.Col>
           <bs.Col md={4}>
             <Starmap worlds={this.state.worlds} onSelectWorld={this.onSelectWorld} />
