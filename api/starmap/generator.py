@@ -249,17 +249,24 @@ def generate_subsector(names_file):
         raise RuntimeError(
             "You must have at least 80 names in the list")
     names = list(names)
-    subsector_name = random.choice(names)
+
+    while True:
+        subsector_name = random.choice(names)
+        if not (
+            Subsector
+            .query
+            .filter(Subsector.name == subsector_name)
+                .count()):
+            break
+
     subsector = Subsector(name=subsector_name)
     random.shuffle(names)
 
-    worlds = []
     for i in range(1, 11):
         for j in range(1, 9):
             if die_roll(2) > 7:
                 name = names.pop()
                 world = generate_world(name, (j, i))
                 world.subsector = subsector
-                worlds.append(world)
 
     return subsector

@@ -1,4 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import UniqueConstraint
 from sqlalchemy.ext.hybrid import hybrid_property
 
 db = SQLAlchemy()
@@ -75,7 +76,7 @@ LONG_TRADE_CLASSIFICATIONS = (
 
 class Subsector(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.Unicode, nullable=False)
+    name = db.Column(db.Unicode, nullable=False, unique=True)
 
     worlds = db.relationship(
         'World',
@@ -130,6 +131,10 @@ class World(db.Model):
     is_consulate = db.Column(db.Boolean, default=False)
 
     travel_zone = db.Column(db.Enum('Green', 'Amber', 'Red'), default='Green')
+
+    __table_args__ = (
+        UniqueConstraint('subsector_id', 'name'),
+    )
 
     def __str__(self):
         if self.name:
