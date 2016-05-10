@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react';
 import Autosuggest from 'react-autosuggest';
+import * as bs from 'react-bootstrap';
 
 
 require('./autosuggest.css');

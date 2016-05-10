@@ -33,3 +33,5 @@ WorldList.propTypes = {
   onSelectWorld: PropTypes.func.isRequired,
   worlds: PropTypes.array.isRequired,
 };
+
+export default WorldList;
