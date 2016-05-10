@@ -40,7 +40,7 @@ const fetchSubsector = (apiCall, world) => {
 export function search(query) {
   return dispatch => {
     dispatch({ type: 'SEARCH_RESULTS_REQUEST', payload: query });
-    fetch(API_URL + 'search?q=' + query)
+    fetch(API_URL + 'search/?q=' + query)
     .then(result => {
       result.json()
       .then(payload => {
@@ -64,7 +64,7 @@ export function clearSearch() {
   };
 }
 export function getRandomSubsector() {
-  return fetchSubsector(fetch(API_URL + 'random/'));
+  return fetchSubsector(fetch(API_URL + 'random/'), { mode: 'cors' });
 }
 
 export function newSubsector() {

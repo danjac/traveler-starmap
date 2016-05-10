@@ -212,7 +212,7 @@ class App extends React.Component {
               </a>
               {selected ?
               <bs.Button onClick={onSelectAll}>
-                <bs.Glyphicon glyph="list" /> View all
+                <bs.Glyphicon glyph="list" /> View all worlds
               </bs.Button> : ''}
             </bs.ButtonGroup>
           </bs.Col>
