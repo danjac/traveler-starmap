@@ -44,7 +44,7 @@ class App extends React.Component {
 
     return (
       <bs.Grid>
-        <h2>Subsector {subsector.name}</h2>
+        <h2>{subsector.name} Subsector </h2>
         <bs.Row>
           <bs.Col md={8}>
             <bs.ButtonGroup>
