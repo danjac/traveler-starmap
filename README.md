@@ -1,6 +1,8 @@
 Traveler RPG Subsector Generator
 ================================
 
+![Alt screenshot](screenshot.png?raw=true "Screenshot")
+
 This web app creates subsector starmaps for the classic desktop role playing game Traveler. You can search existing starmaps and download the maps and data.
 
 As I no longer have copies of the Traveler rulebooks (classic or the more recent Mongoose edtions) I've cribbed the world generation rules from around the net. They're very likely wrong or non-canon, so caveat emptor! Pull requests from veteran players welcome.
@@ -18,8 +20,10 @@ Install
 
 Requires Python 3.5+.
 
+```
    git clone https://github.com/danjac/traveler-starmap.git
    cd ui
    npm install
    cd ../api
    pip install -r requirements.txt
+```
