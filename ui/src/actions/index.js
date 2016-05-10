@@ -40,21 +40,23 @@ const fetchSubsector = (apiCall, world) => {
 export function search(query) {
   return dispatch => {
     dispatch({ type: 'SEARCH_RESULTS_REQUEST', payload: query });
-    fetch(API_URL + 'search/?q=' + query)
-    .then(result => {
-      result.json()
-      .then(payload => {
-        dispatch({
-          type: 'SEARCH_RESULTS_SUCCESS',
-          payload: payload.results,
-        });
-      }, err => {
-        dispatch({
-          type: 'SEARCH_RESULTS_FAILURE',
-          error: err,
+    if (query) {
+      fetch(API_URL + 'search/?q=' + query)
+      .then(result => {
+        result.json()
+        .then(payload => {
+          dispatch({
+            type: 'SEARCH_RESULTS_SUCCESS',
+            payload: payload.results,
+          });
+        }, err => {
+          dispatch({
+            type: 'SEARCH_RESULTS_FAILURE',
+            error: err,
+          });
         });
       });
-    });
+    }
   };
 }
 

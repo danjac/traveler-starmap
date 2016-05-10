@@ -27,7 +27,7 @@ const Search = props => {
   };
 
   const onChange = (event, { newValue }) => {
-    if (newValue && typeof newValue === 'string') {
+    if (typeof newValue === 'string') {
       props.onSearch(newValue);
     }
   };
