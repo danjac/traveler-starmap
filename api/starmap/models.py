@@ -130,7 +130,10 @@ class World(db.Model):
     is_tas = db.Column(db.Boolean, default=False)
     is_consulate = db.Column(db.Boolean, default=False)
 
-    travel_zone = db.Column(db.Enum('Green', 'Amber', 'Red'), default='Green')
+    travel_zone = db.Column(
+        db.Enum('Green', 'Amber', 'Red', name='travel_zones'),
+        default='Green'
+    )
 
     __table_args__ = (
         UniqueConstraint('subsector_id', 'name'),

@@ -11,6 +11,11 @@ export default function (state = initialState, action) {
       return Object.assign({}, state, {
         selected: action.payload,
       });
+    case 'NEW_SUBSECTOR_REQUEST':
+      return Object.assign({}, state, {
+        subsector: null,
+        selected: null,
+      });
     case 'NEW_SUBSECTOR_SUCCESS':
       return Object.assign({}, state, {
         subsector: action.payload,
