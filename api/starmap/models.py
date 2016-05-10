@@ -163,6 +163,7 @@ class World(db.Model):
             'is_pirate_base': self.is_pirate_base,
             'is_tas': self.is_tas,
             'is_consulate': self.is_consulate,
+            'base_codes': self.base_codes,
             'travel_zone': self.travel_zone,
         }
 
@@ -197,6 +198,8 @@ class World(db.Model):
         """
         bases = []
 
+        if self.is_gas_giant:
+            bases.append("G")
         if self.is_naval_base:
             bases.append("N")
         if self.is_scout_base:

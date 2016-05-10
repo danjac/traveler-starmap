@@ -12,7 +12,9 @@ const WorldList = (props) => {
           <th>Coords</th>
           <th>Name</th>
           <th>UWP</th>
-          <th>Notes</th>
+          <th>Trade</th>
+          <th>Bases</th>
+          <th>Travel zone</th>
         </tr>
       </thead>
       <tbody>
@@ -22,6 +24,8 @@ const WorldList = (props) => {
           <td>{w.name}</td>
           <td>{w.uwp}</td>
           <td>{w.short_trade_codes}</td>
+          <td>{w.base_codes}</td>
+          <td>{w.travel_zone}</td>
         </tr>
         ))}
       </tbody>

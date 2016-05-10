@@ -7,7 +7,7 @@ This web app creates subsector starmaps for the classic desktop role playing gam
 
 As I no longer have copies of the Traveler rulebooks (classic or the more recent Mongoose edtions) I've cribbed the world generation rules from around the net. They're very likely wrong or non-canon, so caveat emptor! Pull requests from veteran players welcome.
 
-Subsectors are stored in a database. There's an arbitrary limit of 1000 subsectors you can change in the settings. Names are randomly assigned from a text file; pass in another text file in the settings. Thanks to Chris Wood for the sources:
+Subsectors are stored in a database. There's an arbitrary limit of 1000 subsectors you can change in the settings. Names are randomly assigned from a text file; pass in another text file in the settings. Thanks to Chris Pound for the sources:
 
 http://generators.christopherpound.com/
 
