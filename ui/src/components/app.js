@@ -187,7 +187,13 @@ class App extends React.Component {
     } = this.props;
 
     if (!subsector) {
-      return <div>No subsector selected</div>;
+      return (
+        <div className="container">
+          <div className="text-center" style={{ marginTop: '30%' }}>
+            <h1>Loading...</h1>
+          </div>
+        </div>
+      );
     }
 
     const { worlds } = subsector;

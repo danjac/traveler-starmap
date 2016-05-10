@@ -177,7 +177,7 @@ class World(db.Model):
     @property
     def uwp(self):
         rv = [self.starport]
-        rv += ["%.X" % value for value in (
+        rv += [hexcode(value) for value in (
             self.size,
             self.atmosphere,
             self.hydrographics,
@@ -186,7 +186,7 @@ class World(db.Model):
             self.law_level,
         )]
 
-        rv.append("-%.X" % self.tech_level)
+        rv.append("-%s" % hexcode(self.tech_level))
 
         return "".join(rv)
 
@@ -369,3 +369,11 @@ class World(db.Model):
     @property
     def law_level_desc(self):
         return LAW_LEVELS[self.law_level]
+
+
+def hexcode(num):
+    rv = "%.X" % num
+    # a '16' is rendered as a '10'. For UWP codes we want 'F'
+    if rv == '10':
+        rv = 'F'
+    return rv

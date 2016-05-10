@@ -1,3 +1,4 @@
+import os
 import io
 import csv
 
@@ -18,14 +19,7 @@ from sqlalchemy.sql.expression import func
 from starmap import generator, map
 from starmap.models import db, Subsector, World
 
-
 app = Flask(__name__)
-CORS(app)
-
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/starmap.db'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
-
-db.init_app(app)
 
 
 @app.route("/", methods=['POST'])
@@ -202,13 +196,25 @@ def download_map(id):
 
 
 def create_subsector():
-    # if > 1000 return random
+    """
+    Generates a new subsector. If the limit (default 1000) is set
+    then will instead return a random existing subsector if that
+    limit is exceeded.
+    """
 
-    if Subsector.query.count() > 1000:
+    max_subsectors = int(app.config.get(
+        'STARMAP_MAX_SUBSECTORS', 1000
+    ))
+
+    if Subsector.query.count() > max_subsectors:
         return Subsector.query.order_by(func.random()).first()
 
-    # names file should be arg/setting
-    subsector = generator.generate_subsector('./names.txt')
+    names_file = app.config.get(
+        'STARMAP_NAMES',
+        os.path.join(os.path.dirname(__file__), 'names.txt')
+    )
+
+    subsector = generator.generate_subsector(names_file)
 
     db.session.add(subsector)
     db.session.commit()
@@ -219,6 +225,14 @@ def yesno(value):
     return "Yes" if value else "No"
 
 if __name__ == "__main__":
+
+    config = 'config.' + os.environ.get('STARMAP_CONFIG', 'Development')
+    app.config.from_object(config)
+
+    CORS(app)
+
+    db.init_app(app)
+
     with app.app_context():
         db.create_all()
-    app.run(debug=True)
+    app.run()
