@@ -207,17 +207,30 @@ def generate_world(name, coordinates):
 
     world.tech_level = die_roll(1, tech_modifier, 0, 16)
 
-    travel_zone = 'Green'
-    travel_zone_roll = die_roll(2)
+    # these rules are pretty arbitrary. Normally the referee assigns
+    # zones manually.
 
-    if world.starport == 'X' or travel_zone_roll == '2':
-        travel_zone = 'Red'
-    elif any((
+    travel_zone = 'Green'
+    travel_zone_modifier = 0
+
+    if world.starport == 'X':
+        travel_zone_modifier += 7
+
+    if any((
+        world.atmosphere < 2,
         world.atmosphere > 9,
-        world.government in (0, 7, 10),
+        world.government in (0, 7, 10, 12),
         world.law_level == 0,
-        world.law_level > 8,
-    )) or travel_zone_roll in (11, 12):
+        world.law_level > 9,
+    )):
+        travel_zone_modifier += 3
+
+    travel_zone_roll = die_roll(2, travel_zone_modifier)
+
+    if travel_zone_roll > 16:
+        travel_zone = 'Red'
+
+    elif travel_zone_roll > 12:
         travel_zone = 'Amber'
 
     world.travel_zone = travel_zone
