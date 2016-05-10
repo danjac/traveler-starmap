@@ -85,7 +85,7 @@ def generate_world(name, coordinates):
     world.name = name
     world.coordinates = coordinates
 
-    world.is_gas_giant = die_roll(2) >= 10
+    world.is_gas_giant = die_roll(2) > 6
 
     world.size = die_roll(2, -2)
 
