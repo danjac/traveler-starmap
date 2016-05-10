@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom';
 
 const HEIGHT = 51.96152422706631;
 const WIDTH = 51.96152422706631;
-const MAP_HEIGHT = 520;
+const MAP_HEIGHT = 560;
 const MAP_WIDTH = 360;
 const SIDE = 30.0;
 
