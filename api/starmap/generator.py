@@ -212,7 +212,7 @@ def generate_world(name, coordinates):
 
     if world.starport == 'X' or travel_zone_roll == '2':
         travel_zone = 'Red'
-    elif all((
+    elif any((
         world.atmosphere > 9,
         world.government in (0, 7, 10),
         world.law_level == 0,
