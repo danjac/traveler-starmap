@@ -64,7 +64,7 @@ export function clearSearch() {
   };
 }
 export function getRandomSubsector() {
-  return fetchSubsector(fetch(API_URL + 'random/'), { mode: 'cors' });
+  return fetchSubsector(fetch(API_URL + 'random/'));
 }
 
 export function newSubsector() {
