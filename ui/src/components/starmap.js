@@ -9,6 +9,12 @@ const MAP_WIDTH = 360;
 const SIDE = 30.0;
 
 
+const travelZoneColors = {
+  Green: '#00ff00',
+  Red: '#ff0000',
+  Amber: '#FFBF00',
+};
+
 function pad(num) {
   let s = num + '';
   if (s.length === 1) {
@@ -100,7 +106,7 @@ class Hexagon {
       ctx.fillText(this.world.starport, this.middle.x, this.middle.y);
       ctx.arc(this.middle.x, this.middle.y + 10, 5, 2 * Math.PI, false);
       // we'll make some amber/red later
-      ctx.fillStyle = 'green';
+      ctx.fillStyle = travelZoneColors[this.world.travel_zone];
       ctx.fill();
       ctx.lineWidth = 0.5;
       ctx.strokeStyle = '#003300';

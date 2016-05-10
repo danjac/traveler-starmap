@@ -10,7 +10,6 @@ require('bootstrap/dist/css/bootstrap.min.css');
 require('bootstrap/dist/css/bootstrap-theme.min.css');
 require('./autosuggest.css');
 
-
 const Search = props => {
   const getSuggestionValue = suggestion => {
     return suggestion;
@@ -88,7 +87,7 @@ const WorldDetail = props => {
         <dt>UWP</dt>
         <dd>{world.uwp}</dd>
         <dt>Travel code</dt>
-        <dd style={{ color: '#090' }}>Green</dd>
+        <dd>{world.travel_zone}</dd>
         <dt>Starport</dt>
         <dd>{world.starport}</dd>
         <dt>Size</dt>

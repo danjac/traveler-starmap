@@ -207,6 +207,21 @@ def generate_world(name, coordinates):
 
     world.tech_level = die_roll(1, tech_modifier, 0, 16)
 
+    travel_zone = 'Green'
+    travel_zone_roll = die_roll(2)
+
+    if world.starport == 'X' or travel_zone_roll == '2':
+        travel_zone = 'Red'
+    elif all((
+        world.atmosphere > 9,
+        world.government in (0, 7, 10),
+        world.law_level == 0,
+        world.law_level > 8,
+    )) or travel_zone_roll in (11, 12):
+        travel_zone = 'Amber'
+
+    world.travel_zone = travel_zone
+
     return world
 
 

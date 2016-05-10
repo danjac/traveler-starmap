@@ -129,6 +129,8 @@ class World(db.Model):
     is_tas = db.Column(db.Boolean, default=False)
     is_consulate = db.Column(db.Boolean, default=False)
 
+    travel_zone = db.Column(db.Enum('Green', 'Amber', 'Red'), default='Green')
+
     def __str__(self):
         if self.name:
             return "%s:%s" % (self.name, self.uwp)
@@ -161,6 +163,7 @@ class World(db.Model):
             'is_pirate_base': self.is_pirate_base,
             'is_tas': self.is_tas,
             'is_consulate': self.is_consulate,
+            'travel_zone': self.travel_zone,
         }
 
     @hybrid_property

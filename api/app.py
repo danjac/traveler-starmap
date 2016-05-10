@@ -131,6 +131,7 @@ def download_csv(id):
         "Coords",
         "UWP",
         "Starport",
+        "Travel zone",
         "Size",
         "Atmosphere",
         "Temperature",
@@ -156,6 +157,7 @@ def download_csv(id):
             world.coords_desc,
             world.uwp,
             world.starport,
+            world.travel_zone,
             world.size_desc,
             world.atmosphere_desc,
             world.temperature_desc,
@@ -200,6 +202,11 @@ def download_map(id):
 
 
 def create_subsector():
+    # if > 1000 return random
+
+    if Subsector.query.count() > 1000:
+        return Subsector.query.order_by(func.random()).first()
+
     # names file should be arg/setting
     subsector = generator.generate_subsector('./names.txt')
 
