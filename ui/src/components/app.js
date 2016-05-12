@@ -80,7 +80,11 @@ class App extends React.Component {
             }
           </bs.Col>
           <bs.Col md={4}>
-            <Starmap worlds={worlds} selected={selected} onSelectWorld={onSelectWorld} />
+            <Starmap
+              worlds={worlds}
+              selected={selected}
+              onSelectWorld={onSelectWorld}
+            />
           </bs.Col>
         </bs.Row>
       </bs.Grid>

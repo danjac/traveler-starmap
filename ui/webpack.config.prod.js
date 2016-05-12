@@ -4,6 +4,8 @@ var HtmlWebpackPlugin = require('html-webpack-plugin');
 var UglifyJsPlugin = webpack.optimize.UglifyJsPlugin;
 var DefinePlugin = webpack.DefinePlugin;
 
+const API_URL = process.env.API_URL || 'http://localhost:5000/';
+
 var plugins = [
   new HtmlWebpackPlugin({
     title: 'Traveler World Generator',
@@ -13,9 +15,12 @@ var plugins = [
   new DefinePlugin({
     'process.env': {
       NODE_ENV: JSON.stringify('production'),
+      API_URL: JSON.stringify(API_URL),
     },
   }),
 ];
+
+console.log(process.env.API_URL);
 
 var entry = [
   './src/index.js',
