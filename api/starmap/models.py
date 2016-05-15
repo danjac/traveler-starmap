@@ -37,9 +37,7 @@ LAW_LEVELS = (
 
 TECH_LEVELS = (
     "Stone Age (fire)",
-    "Bronze Age (3500 BC)",
-    "Iron Age (1200 BC)",
-    "Medieval Age (600 AD)",
+    "Bronze Age (3500 BC) - Middle Ages (600 AD)",
     "Age of Sail (1450 AD)",
     "Industrial Revolution (1730 AD)",
     "Mechanized Age (1880 AD)",
