@@ -4,7 +4,7 @@ from starmap.models import World, hexcode
 def test_hexcodes():
     assert hexcode(1) == '1'
     assert hexcode(10) == 'A'
-    assert hexcode(16) == 'F'
+    assert hexcode(16) == 'G'
 
 
 def test_uwp():
