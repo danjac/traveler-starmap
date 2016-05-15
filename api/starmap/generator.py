@@ -210,28 +210,29 @@ def generate_world(name, coordinates):
     # these rules are pretty arbitrary. Normally the referee assigns
     # zones manually.
 
-    travel_zone = 'Green'
-    travel_zone_modifier = 0
-
     if world.starport == 'X':
-        travel_zone_modifier += 7
-
-    if any((
-        world.atmosphere < 2,
-        world.atmosphere > 9,
-        world.government in (0, 7, 10, 12),
-        world.law_level == 0,
-        world.law_level > 9,
-    )):
-        travel_zone_modifier += 3
-
-    travel_zone_roll = die_roll(2, travel_zone_modifier)
-
-    if travel_zone_roll > 16:
         travel_zone = 'Red'
 
-    elif travel_zone_roll > 12:
-        travel_zone = 'Amber'
+    else:
+        travel_zone = 'Green'
+        travel_zone_modifier = 0
+
+        if any((
+            world.atmosphere < 2,
+            world.atmosphere > 9,
+            world.government in (0, 7, 10, 12),
+            world.law_level == 0,
+            world.law_level > 9,
+        )):
+            travel_zone_modifier += 3
+
+        travel_zone_roll = die_roll(2, travel_zone_modifier)
+
+        if travel_zone_roll > 16:
+            travel_zone = 'Red'
+
+        elif travel_zone_roll > 12:
+            travel_zone = 'Amber'
 
     world.travel_zone = travel_zone
 
@@ -261,6 +262,7 @@ def generate_subsector(names_file):
 
     subsector = Subsector(name=subsector_name)
     random.shuffle(names)
+    names = names[:80]
 
     for i in range(1, 11):
         for j in range(1, 9):

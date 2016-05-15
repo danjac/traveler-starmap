@@ -24,6 +24,7 @@ class App extends React.Component {
       onSearchSelect,
       onSelectWorld,
       onNewSubsector,
+      onRandomSubsector,
       onSelectAll,
     } = this.props;
 
@@ -48,19 +49,22 @@ class App extends React.Component {
         <bs.Row>
           <bs.Col md={8}>
             <bs.ButtonGroup>
-              <bs.Button onClick={onNewSubsector}>
-                <bs.Glyphicon glyph="plus" /> New subsector
-              </bs.Button>
-              <a className="btn btn-default" href={csvUrl}>
-                <bs.Glyphicon glyph="download" /> Download CSV
-              </a>
-              <a className="btn btn-default" href={pngUrl}>
-                <bs.Glyphicon glyph="map-marker" /> Download map (PNG)
-              </a>
               {selected ?
-              <bs.Button onClick={onSelectAll}>
-                <bs.Glyphicon glyph="list" /> View all worlds
+              <bs.Button onClick={onSelectAll} title="See all worlds in subsector">
+                <bs.Glyphicon glyph="list" />
               </bs.Button> : ''}
+              <bs.Button onClick={onNewSubsector} title="Create new subsector">
+                <bs.Glyphicon glyph="plus" />
+              </bs.Button>
+              <bs.Button onClick={onRandomSubsector} title="Get random subsector">
+                <bs.Glyphicon glyph="random" />
+              </bs.Button>
+              <a className="btn btn-default" href={csvUrl} title="Download CSV">
+                <bs.Glyphicon glyph="download" />
+              </a>
+              <a className="btn btn-default" href={pngUrl} title="Download map (PNG)">
+                <bs.Glyphicon glyph="map-marker" />
+              </a>
             </bs.ButtonGroup>
           </bs.Col>
           <bs.Col md={4}>
@@ -97,7 +101,7 @@ App.propTypes = {
   subsector: PropTypes.object,
   searchResults: PropTypes.array,
   searchQuery: PropTypes.string,
-  isSearchLoading: PropTypes.bool,
+  onRandomSubsector: PropTypes.func.isRequired,
   onSearch: PropTypes.func.isRequired,
   onSearchSelect: PropTypes.func.isRequired,
   onSelectAll: PropTypes.func.isRequired,
@@ -127,6 +131,9 @@ const mapDispatchToProps = dispatch => {
     },
     onNewSubsector() {
       dispatch(actions.newSubsector());
+    },
+    onRandomSubsector() {
+      dispatch(actions.getRandomSubsector());
     },
     onSearch(value) {
       dispatch(actions.search(value));

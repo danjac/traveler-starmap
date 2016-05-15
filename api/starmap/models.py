@@ -35,6 +35,28 @@ LAW_LEVELS = (
     "Rigid control of civilian movement",
 )
 
+TECH_LEVELS = (
+    "Stone Age (fire)",
+    "Bronze Age (3500 BC)",
+    "Iron Age (1200 BC)",
+    "Medieval Age (600 AD)",
+    "Age of Sail (1450 AD)",
+    "Industrial Revolution (1730 AD)",
+    "Mechanized Age (1880 AD)",
+    "Circa 1910 AD",
+    "Nuclear Age (1940 AD)",
+    "Circa 1970 AD",
+    "Digital Age (1990 AD)",
+    "Early Stellar (2050 AD)",
+    "Early Stellar (2120 AD)",
+    "Average Stellar",
+    "Average Imperial",
+    "Average Stellar",
+    "High Stellar",
+    "Imperial Maximum",
+    "Darrian Historical Maximum",
+)
+
 SHORT_TRADE_CLASSIFICATIONS = (
     ('is_agricultural', 'Ag'),
     ('is_asteroid_belt', 'As'),
@@ -161,7 +183,7 @@ class World(db.Model):
             'population': self.population_desc,
             'government': self.government_desc,
             'law_level': self.law_level_desc,
-            'tech_level': self.tech_level,
+            'tech_level': self.tech_level_desc,
             'short_trade_codes': self.short_trade_classifications,
             'long_trade_codes': self.long_trade_classifications,
             'is_gas_giant': self.is_gas_giant,
@@ -381,10 +403,14 @@ class World(db.Model):
     def law_level_desc(self):
         return LAW_LEVELS[self.law_level]
 
+    @property
+    def tech_level_desc(self):
+        return TECH_LEVELS[self.tech_level]
+
 
 def hexcode(num):
     rv = "%.X" % num
-    # a '16' is rendered as a '10'. For UWP codes we want 'F'
+    # a '16' is rendered as a '10'. For UWP codes we want 'G'
     if rv == '10':
-        rv = 'F'
+        rv = 'G'
     return rv
