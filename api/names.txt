@@ -11562,7 +11562,6 @@ Nova Kong
 Nyvan
 Arrakis
 Caladan
-Dosadi
 Giedi Prime
 Ix
 Kaitain
@@ -11689,7 +11688,6 @@ Mer
 Ork
 Metaluna
 Koozebane
-Demeter
 Lave
 Harvest
 Onyx
@@ -11700,5 +11698,181 @@ Duna
 Dres
 Jool
 Eeloo
-
-
+Abydos
+Aegis VII
+Aldébaran
+Altair IV
+Amel
+Antar
+Anus
+Athena
+Athos
+Aurelia
+Avalon
+Balaho
+Ballybran
+Belzagor
+Big Planet
+Botany
+Chiron
+Chorus
+Corneria
+Creck
+Cyteen
+Cybertron
+Darwin IV
+Demeter
+Deucalion
+Dosadi
+Downbelow
+Dragon's Egg
+Eayn
+Emm Luther
+Erna
+Erythro
+Eternia
+Etheria
+Far Away
+Fhloston Paradise
+Finisterre
+Fortuna
+Furya
+G889
+Gaia
+Gehenna
+Ghibalb
+Gorta
+Gurun
+Halvmörk
+He
+Helghan
+Helliconia
+Hesduros
+Hesikos
+Hiigara
+Hocotate
+Ireta
+Ishtar
+Iszm
+Irk
+Janjur Qom
+Kaelarot
+Karava
+Kerbin
+Kharak
+Krankor
+Kregen
+Krull
+Kulthea
+Lagash
+La Maetelle
+Lamarckia
+Land and Overland
+Leera
+Lithia
+LittleBigPlanet
+Lumen
+Macbeth
+Maethrillian
+Magrathea
+Majipoor
+Malurok
+Medea
+Mejare and Tarak
+Melancholia
+Metaluna
+Midkemia
+Miller's Planet
+Minerva
+Miron
+Mobius
+Mongo
+Mor
+Muloqt
+Nacre
+New Amazonia
+New Terra
+Nidor
+Nihil
+Nirn
+Oa
+Omega
+Optera
+Orthe
+Palamok
+Pandarve
+Pandora
+Perdide
+Peaceland
+Petaybee
+Pharagos
+Placet
+Lucie
+Prysmos
+Pyrrus
+Ragnarok
+Reach
+Regis III
+Remulak
+Requiem
+Reverie
+Riverworld
+Rocheworld
+Rosetta
+Rubanis
+Rylos
+Ryn
+Saepon'kal
+Sangheliosd
+Sangre
+Sartorias
+Sauria
+Secilia
+Seiren
+Sera
+Shikasta
+Shora
+Skaro
+Smoke Ring
+Soror
+Base Bullamanka
+Stroggos
+Takis
+Tallon IV
+Tanis
+Targ
+Te
+Tencton
+Thalassa
+Thra
+Thundera
+Tiamat
+Tirol
+Titan
+Tormance
+Tralfamadore
+Tran
+Tranai
+Troas
+Tschai
+T'vao
+Twinsun
+Ulgethon
+Valyanop
+Vekta
+Venom
+Vinea
+Vhilinyar
+Wait
+Water
+Worlorn
+Wormwood
+Zahir
+Zarathustra
+Zarkon
+Zavron
+Zebes
+Zeelich
+Zeist
+Zillikian
+Zyrgon

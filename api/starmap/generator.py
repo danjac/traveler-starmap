@@ -239,6 +239,54 @@ def generate_world(name, coordinates):
     return world
 
 
+def select_capital(worlds):
+
+    if not worlds:
+        return None
+
+    rounds = (
+        (
+            ('is_naval_base', True),
+            ('is_scout_base', True),
+            ('starport', 'A'),
+        ),
+        (
+            ('is_naval_base', True),
+            ('starport', 'A'),
+        ),
+        (
+            ('is_naval_base', True),
+        ),
+        (
+            ('starport', 'A'),
+        ),
+        (
+            ('starport', 'B'),
+            ('is_scout_base', True),
+        ),
+        (
+            ('is_scout_base', True),
+        ),
+        (
+            ('starport', 'B'),
+        ),
+    )
+
+    def _cmp(candidates):
+        return sorted(candidates, key=lambda w: w.population, reverse=True)[0]
+
+    for round in rounds:
+        candidates = [
+            world for world in worlds if all([
+                getattr(world, attr) == value for attr, value in round
+            ])
+        ]
+        if candidates:
+            return _cmp(candidates)
+
+    return _cmp(worlds)
+
+
 def generate_subsector(names_file):
 
     names = []
@@ -263,12 +311,20 @@ def generate_subsector(names_file):
     subsector = Subsector(name=subsector_name)
     random.shuffle(names)
     names = names[:80]
+    worlds = []
 
     for i in range(1, 11):
         for j in range(1, 9):
             if die_roll(2) > 7:
                 name = names.pop()
                 world = generate_world(name, (j, i))
-                world.subsector = subsector
+                worlds.append(world)
+
+    subsector.worlds = worlds
+
+    capital = select_capital(worlds)
+
+    if capital:
+        capital.is_subsector_capital = True
 
     return subsector

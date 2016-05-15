@@ -74,6 +74,7 @@ SHORT_TRADE_CLASSIFICATIONS = (
     ('is_rich', 'Ri'),
     ('is_vaccuum_world', 'Va'),
     ('is_water_world', 'Wa'),
+    ('is_subsector_capital', 'Ca'),
 )
 
 LONG_TRADE_CLASSIFICATIONS = (
@@ -93,6 +94,7 @@ LONG_TRADE_CLASSIFICATIONS = (
     ('is_rich', 'Rich'),
     ('is_vaccuum_world', 'Vaccuum world'),
     ('is_water_world', 'Water world'),
+    ('is_subsector_capital', 'Subsector capital'),
 )
 
 
@@ -152,6 +154,8 @@ class World(db.Model):
     is_tas = db.Column(db.Boolean, default=False)
     is_consulate = db.Column(db.Boolean, default=False)
 
+    is_subsector_capital = db.Column(db.Boolean, default=False)
+
     travel_zone = db.Column(
         db.Enum('Green', 'Amber', 'Red', name='travel_zones'),
         default='Green'
@@ -186,6 +190,7 @@ class World(db.Model):
             'tech_level': self.tech_level_desc,
             'short_trade_codes': self.short_trade_classifications,
             'long_trade_codes': self.long_trade_classifications,
+            'is_subsector_capital': self.is_subsector_capital,
             'is_gas_giant': self.is_gas_giant,
             'is_naval_base': self.is_naval_base,
             'is_scout_base': self.is_scout_base,

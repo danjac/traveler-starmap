@@ -102,14 +102,24 @@ class Hexagon {
     ctx.fillText(this.id, this.middle.x, this.middle.y - 10);
 
     if (this.world) {
+      const zoneColor = travelZoneColors[this.world.travel_zone];
       ctx.beginPath();
       ctx.fillText(this.world.starport, this.middle.x, this.middle.y);
       ctx.arc(this.middle.x, this.middle.y + 10, 5, 2 * Math.PI, false);
       // we'll make some amber/red later
-      ctx.fillStyle = travelZoneColors[this.world.travel_zone];
+      if (this.world.is_subsector_capital) {
+        ctx.fillStyle = '#000';
+      } else {
+        ctx.fillStyle = zoneColor;
+      }
       ctx.fill();
-      ctx.lineWidth = 0.5;
-      ctx.strokeStyle = '#003300';
+      if (this.world.is_subsector_capital) {
+        ctx.strokeStyle = zoneColor;
+        ctx.lineWidth = 1.5;
+      } else {
+        ctx.strokeStyle = '#003300';
+        ctx.lineWidth = 0.5;
+      }
       ctx.closePath();
       ctx.stroke();
     }

@@ -159,7 +159,7 @@ def download_csv(id):
             world.population_desc,
             world.government_desc,
             world.law_level_desc,
-            world.tech_level,
+            world.tech_level_desc,
             world.long_trade_classifications,
             yesno(world.is_gas_giant),
             yesno(world.is_scout_base),
