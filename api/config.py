@@ -20,8 +20,8 @@ class _Production(Config):
     HOST = '0.0.0.0'
 
     def __init__(self):
-        self.SQLALCHEMY_DATABASE_URI = os.environ['DATABASE_URL']
-        self.PORT = os.environ['PORT']
+        self.SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL')
+        self.PORT = os.environ.get('PORT', Config.PORT)
 
 
 Production = _Production()
