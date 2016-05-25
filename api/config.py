@@ -5,6 +5,7 @@ class Config(object):
     DEBUG = False
     TESTING = False
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    PORT = 5000
 
 
 class Development(Config):
@@ -18,8 +19,7 @@ class _Production(Config):
 
     def __init__(self):
         self.SQLALCHEMY_DATABASE_URI = os.environ['DATABASE_URL']
-        self.SERVER_NAME = '0.0.0.0:{}'.format(os.environ['PORT'])
-        print(os.environ)
+        self.PORT = os.environ['PORT']
 
 
 Production = _Production()
