@@ -19,6 +19,7 @@ class _Production(Config):
     def __init__(self):
         self.SQLALCHEMY_DATABASE_URI = os.environ['DATABASE_URL']
         self.SERVER_NAME = '0.0.0.0:{}'.format(os.environ['PORT'])
+        print(os.environ)
 
 
 Production = _Production()
