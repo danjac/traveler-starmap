@@ -17,7 +17,7 @@ class _Production(Config):
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     def __init__(self):
-        self.SQLALCHEMY_DATABASE_URI = os.environ.get('STARMAP_DATABASE_URI')
+        self.SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL')
 
 
 Production = _Production()

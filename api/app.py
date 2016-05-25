@@ -230,7 +230,7 @@ def yesno(value):
 
 if __name__ == "__main__":
 
-    config = 'config.' + os.environ.get('STARMAP_CONFIG', 'Development')
+    config = 'config.' + os.environ.get('STARMAP_ENV', 'Development')
     app.config.from_object(config)
 
     CORS(app)
