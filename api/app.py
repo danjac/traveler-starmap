@@ -14,6 +14,8 @@ from flask import (
 
 from flask_cors import CORS
 
+from slugify import slugify_url
+
 from sqlalchemy.orm import joinedload
 from sqlalchemy.sql.expression import func
 
@@ -107,7 +109,6 @@ def get_random_subsector():
 def get_subsector_detail(id):
     """
     Returns details for specific subsector
-    If format=csv then return details CSV download
     """
     subsector = Subsector.query.get_or_404(id)
     return jsonify(subsector.to_json())
@@ -173,11 +174,13 @@ def download_csv(id):
             yesno(world.is_consulate),
         ])
 
+    filename = 'subsector-{}.csv'.format(slugify_url(subsector.name))
+
     return send_file(
         io.BytesIO(fp.getvalue().encode()),
         mimetype='text/csv',
         as_attachment=True,
-        attachment_filename='subsector.csv',
+        attachment_filename=filename,
     )
 
 
@@ -190,11 +193,14 @@ def download_map(id):
     subsector = Subsector.query.get_or_404(id)
     map.draw_map(fp, subsector.worlds)
     fp.seek(0)
+
+    filename = 'starmap-{}.png'.format(slugify_url(subsector.name))
+
     return send_file(
         fp,
         mimetype='image/png',
         as_attachment=True,
-        attachment_filename='starmap.png',
+        attachment_filename=filename,
     )
 
 
