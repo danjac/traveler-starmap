@@ -2,6 +2,8 @@ import os
 import io
 import csv
 
+from pathlib import Path
+
 from flask import (
     Flask,
     send_file,
@@ -30,8 +32,9 @@ def new_subsector():
 
     We need some limit on the number of subectors
     """
-    subsector = create_subsector()
-    return make_response(jsonify(subsector.to_json()), 201)
+    subsector, is_new = create_subsector()
+    status_code = 201 if is_new else 200
+    return make_response(jsonify(subsector.to_json()), status_code)
 
 
 @app.route("/search/")
@@ -90,12 +93,13 @@ def get_random_subsector():
     then creates a new subsector and returns that.
     """
 
-    status_code = 200
     subsector = Subsector.query.order_by(func.random()).first()
+    is_new = False
 
     if subsector is None:
-        subsector = create_subsector()
-        status_code = 201
+        subsector, is_new = create_subsector()
+
+    status_code = 201 if is_new else 200
 
     return make_response(jsonify(subsector.to_json()), status_code)
 
@@ -207,18 +211,18 @@ def create_subsector():
     ))
 
     if Subsector.query.count() > max_subsectors:
-        return Subsector.query.order_by(func.random()).first()
+        return Subsector.query.order_by(func.random()).first(), False
 
     names_file = app.config.get(
         'STARMAP_NAMES',
-        os.path.join(os.path.dirname(__file__), 'names.txt')
+        Path(__file__) / 'names.txt',
     )
 
     subsector = generator.generate_subsector(names_file)
 
     db.session.add(subsector)
     db.session.commit()
-    return subsector
+    return subsector, True
 
 
 def yesno(value):
