@@ -219,7 +219,7 @@ def create_subsector():
         Path(__file__).parent / 'names.txt',
     )
 
-    subsector = generator.generate_subsector(names_file)
+    subsector = generator.generate_subsector("./names.txt")
 
     db.session.add(subsector)
     db.session.commit()
