@@ -3,8 +3,6 @@ import io
 import csv
 import logging
 
-from pathlib import Path
-
 from flask import (
     Flask,
     send_file,
@@ -213,11 +211,6 @@ def create_subsector():
 
     if Subsector.query.count() > max_subsectors:
         return Subsector.query.order_by(func.random()).first(), False
-
-    names_file = app.config.get(
-        'STARMAP_NAMES',
-        Path(__file__).parent / 'names.txt',
-    )
 
     subsector = generator.generate_subsector("./names.txt")
 
