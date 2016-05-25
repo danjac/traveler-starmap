@@ -216,10 +216,10 @@ def create_subsector():
 
     names_file = app.config.get(
         'STARMAP_NAMES',
-        Path(__file__) / 'names.txt',
+        Path(__file__).parent / 'names.txt',
     )
 
-    subsector = generator.generate_subsector(names_file.absolute())
+    subsector = generator.generate_subsector(names_file)
 
     db.session.add(subsector)
     db.session.commit()
