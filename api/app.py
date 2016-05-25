@@ -1,6 +1,7 @@
 import os
 import io
 import csv
+import logging
 
 from pathlib import Path
 
@@ -239,6 +240,13 @@ if __name__ == "__main__":
 
     with app.app_context():
         db.create_all()
+
+    # Log only in production mode.
+    if not app.debug:
+        stream_handler = logging.StreamHandler()
+        stream_handler.setLevel(logging.INFO)
+        app.logger.addHandler(stream_handler)
+
     app.run(
         host=app.config['HOST'],
         port=app.config['PORT']
