@@ -54,8 +54,8 @@ export class App extends React.Component {
 
     const { worlds } = subsector;
 
-    const pngUrl = `${actions.API_URL}${subsector.id}/map/`;
-    const csvUrl = `${actions.API_URL}${subsector.id}/csv/`;
+    const pngUrl = `${__API_URL__}${subsector.id}/map/`;
+    const csvUrl = `${__API_URL__}${subsector.id}/csv/`;
 
     return (
       <bs.Grid>

@@ -3,6 +3,9 @@
 {
   "extends": "airbnb",
   "parser": "babel-eslint",
+  "globals": {
+    "__API_URL__": true
+  },
   "rules": {
     "no-alert": 0,
     "no-var": 0,

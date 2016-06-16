@@ -1,7 +1,5 @@
 import fetch from 'isomorphic-fetch';
 
-export const API_URL = process.env.API_URL || 'http://localhost:5000/';
-
 function createAction(type, payload) {
   if (payload instanceof Error) {
     return { type, error: payload };
@@ -35,7 +33,7 @@ export function search(query) {
   return dispatch => {
     dispatch(createAction('SEARCH_RESULTS_REQUEST', query));
     if (query) {
-      fetch(API_URL + 'search/?q=' + query)
+      fetch(__API_URL__ + 'search/?q=' + query)
       .then(result => {
         result.json()
         .then(payload => {
@@ -51,11 +49,11 @@ export function search(query) {
 export const clearSearch = () => createAction('CLEAR_SEARCH');
 
 export function getRandomSubsector() {
-  return fetchSubsector(fetch(API_URL + 'random/'));
+  return fetchSubsector(fetch(__API_URL__ + 'random/'));
 }
 
 export function newSubsector() {
-  const apiCall = fetch(API_URL, {
+  const apiCall = fetch(__API_URL__, {
     mode: 'cors',
     method: 'POST',
   });
@@ -65,7 +63,7 @@ export function newSubsector() {
 export function jumpTo(searchResult) {
   return dispatch => {
     dispatch(clearSearch());
-    const apiCall = fetch(API_URL + searchResult.subsector.id + '/');
+    const apiCall = fetch(__API_URL__ + searchResult.subsector.id + '/');
     dispatch(fetchSubsector(apiCall, searchResult.world));
   };
 }

@@ -2,6 +2,7 @@ var path = require('path');
 var webpack = require('webpack');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var HotModuleReplacementPlugin = webpack.HotModuleReplacementPlugin;
+var DefinePlugin = webpack.DefinePlugin;
 
 var serverPort = 3000;
 
@@ -10,7 +11,13 @@ var plugins = [
     title: 'Traveler World Generator',
     template: 'index.html'
   }),
-  new HotModuleReplacementPlugin()
+  new HotModuleReplacementPlugin(),
+  new DefinePlugin({
+    'process.env': {
+      NODE_ENV: JSON.stringify('development'),
+    },
+    __API_URL__: JSON.stringify('http://localhost:5000/'),
+  }),
 ];
 
 var entry = [
