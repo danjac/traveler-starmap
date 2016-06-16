@@ -2,36 +2,30 @@ import fetch from 'isomorphic-fetch';
 
 export const API_URL = process.env.API_URL || 'http://localhost:5000/';
 
-
-export function selectWorld(world) {
-  return {
-    type: 'WORLD_SELECTED',
-    payload: world,
-  };
+function createAction(type, payload) {
+  if (payload instanceof Error) {
+    return { type, error: payload };
+  }
+  return { type, payload };
 }
 
+export const selectWorld = world => createAction('WORLD_SELECTED', world);
 
 const fetchSubsector = (apiCall, world) => {
   return dispatch => {
     dispatch(selectWorld(null));
-    dispatch({ type: 'NEW_SUBSECTOR_REQUEST' });
+    dispatch(createAction('NEW_SUBSECTOR_REQUEST'));
     apiCall
     .then(result => {
       result.json()
       .then(payload => {
-        dispatch({
-          type: 'NEW_SUBSECTOR_SUCCESS',
-          payload,
-        });
+        dispatch(createAction('NEW_SUBSECTOR_SUCCESS', payload));
         if (world) {
           dispatch(selectWorld(world));
         }
       });
     }, err => {
-      dispatch({
-        type: 'NEW_SUBSECTOR_FAILURE',
-        error: err,
-      });
+      dispatch('NEW_SUBSECTOR_FAILURE', err);
     });
   };
 };
@@ -39,32 +33,23 @@ const fetchSubsector = (apiCall, world) => {
 
 export function search(query) {
   return dispatch => {
-    dispatch({ type: 'SEARCH_RESULTS_REQUEST', payload: query });
+    dispatch(createAction('SEARCH_RESULTS_REQUEST', query));
     if (query) {
       fetch(API_URL + 'search/?q=' + query)
       .then(result => {
         result.json()
         .then(payload => {
-          dispatch({
-            type: 'SEARCH_RESULTS_SUCCESS',
-            payload: payload.results,
-          });
+          dispatch(createAction('SEARCH_RESULTS_SUCCESS', payload.results));
         }, err => {
-          dispatch({
-            type: 'SEARCH_RESULTS_FAILURE',
-            error: err,
-          });
+          dispatch(createAction('SEARCH_RESULTS_FAILURE', err));
         });
       });
     }
   };
 }
 
-export function clearSearch() {
-  return {
-    type: 'CLEAR_SEARCH',
-  };
-}
+export const clearSearch = () => createAction('CLEAR_SEARCH');
+
 export function getRandomSubsector() {
   return fetchSubsector(fetch(API_URL + 'random/'));
 }

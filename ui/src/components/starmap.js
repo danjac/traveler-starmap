@@ -163,6 +163,12 @@ function createHexes(worlds, selected) {
 
 class Starmap extends React.Component {
 
+  static propTypes = {
+    worlds: PropTypes.array.isRequired,
+    selected: PropTypes.object,
+    onSelectWorld: PropTypes.func.isRequired,
+  };
+
   constructor(props) {
     super(props);
     this.onClick = this.onClick.bind(this);
@@ -235,11 +241,5 @@ class Starmap extends React.Component {
   }
 
 }
-
-Starmap.propTypes = {
-  worlds: PropTypes.array.isRequired,
-  selected: PropTypes.object,
-  onSelectWorld: PropTypes.func.isRequired,
-};
 
 export default Starmap;

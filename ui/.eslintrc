@@ -2,6 +2,7 @@
 // Copy this file, and add rule overrides as needed.
 {
   "extends": "airbnb",
+  "parser": "babel-eslint",
   "rules": {
     "no-alert": 0,
     "no-var": 0,

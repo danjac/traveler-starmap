@@ -8,32 +8,17 @@ const initialState = {
 export default function (state = initialState, action) {
   switch (action.type) {
     case 'WORLD_SELECTED':
-      return Object.assign({}, state, {
-        selected: action.payload,
-      });
+      return { ...state, selected: action.payload };
     case 'NEW_SUBSECTOR_REQUEST':
-      return Object.assign({}, state, {
-        subsector: null,
-        selected: null,
-      });
+      return { ...state, subsector: null, selected: null };
     case 'NEW_SUBSECTOR_SUCCESS':
-      return Object.assign({}, state, {
-        subsector: action.payload,
-      });
+      return { ...state, subsector: action.payload };
     case 'CLEAR_SEARCH':
-      return Object.assign({}, state, {
-        searchResults: [],
-        searchQuery: '',
-      });
+      return { ...state, searchResults: [], searchQuery: '' };
     case 'SEARCH_RESULTS_REQUEST':
-      return Object.assign({}, state, {
-        searchResults: [],
-        searchQuery: action.payload,
-      });
+      return { ...state, searchResults: [], searchQuery: action.payload };
     case 'SEARCH_RESULTS_SUCCESS':
-      return Object.assign({}, state, {
-        searchResults: action.payload,
-      });
+      return { ...state, searchResults: action.payload };
     default:
       return state;
 

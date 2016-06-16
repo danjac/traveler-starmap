@@ -12,7 +12,21 @@ require('bootstrap/dist/css/bootstrap.min.css');
 require('bootstrap/dist/css/bootstrap-theme.min.css');
 
 
-class App extends React.Component {
+export class App extends React.Component {
+
+  static propTypes = {
+    selected: PropTypes.object,
+    subsector: PropTypes.object,
+    searchResults: PropTypes.array,
+    searchQuery: PropTypes.string,
+    onRandomSubsector: PropTypes.func.isRequired,
+    onSearch: PropTypes.func.isRequired,
+    onSearchSelect: PropTypes.func.isRequired,
+    onSelectAll: PropTypes.func.isRequired,
+    onSelectWorld: PropTypes.func.isRequired,
+    onNewSubsector: PropTypes.func.isRequired,
+  };
+
 
   render() {
     const {
@@ -96,20 +110,6 @@ class App extends React.Component {
   }
 }
 
-App.propTypes = {
-  selected: PropTypes.object,
-  subsector: PropTypes.object,
-  searchResults: PropTypes.array,
-  searchQuery: PropTypes.string,
-  onRandomSubsector: PropTypes.func.isRequired,
-  onSearch: PropTypes.func.isRequired,
-  onSearchSelect: PropTypes.func.isRequired,
-  onSelectAll: PropTypes.func.isRequired,
-  onSelectWorld: PropTypes.func.isRequired,
-  onNewSubsector: PropTypes.func.isRequired,
-};
-
-
 const mapStateToProps = state => {
   const { subsector, selected, searchResults, searchQuery } = state;
   return {
@@ -144,7 +144,4 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(App);
+export default connect(mapStateToProps, mapDispatchToProps)(App);
