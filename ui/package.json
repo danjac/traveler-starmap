@@ -29,6 +29,7 @@
   },
   "dependencies": {
     "bootstrap": "^3.3.6",
+    "humps": "^1.1.0",
     "isomorphic-fetch": "^2.2.1",
     "react": "^15.0.2",
     "react-autosuggest": "^3.7.3",

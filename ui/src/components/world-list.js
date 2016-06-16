@@ -23,9 +23,9 @@ const WorldList = (props) => {
           <td>{w.coords}</td>
           <td>{w.name}</td>
           <td>{w.uwp}</td>
-          <td>{w.short_trade_codes}</td>
-          <td>{w.base_codes}</td>
-          <td>{w.travel_zone}</td>
+          <td>{w.shortTradeCodes}</td>
+          <td>{w.baseCodes}</td>
+          <td>{w.travelZone}</td>
         </tr>
         ))}
       </tbody>

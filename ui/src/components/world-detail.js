@@ -14,7 +14,7 @@ const WorldDetail = props => {
         <dt>UWP</dt>
         <dd>{world.uwp}</dd>
         <dt>Travel code</dt>
-        <dd>{world.travel_zone}</dd>
+        <dd>{world.travelZone}</dd>
         <dt>Starport</dt>
         <dd>{world.starport}</dd>
         <dt>Size</dt>
@@ -30,29 +30,29 @@ const WorldDetail = props => {
         <dt>Government</dt>
         <dd>{world.government}</dd>
         <dt>Law level</dt>
-        <dd>{world.law_level}</dd>
+        <dd>{world.lawLevel}</dd>
         <dt>Tech level</dt>
-        <dd>{world.tech_level}</dd>
+        <dd>{world.techLevel}</dd>
         <dt>Notes</dt>
-        <dd>{world.long_trade_codes}</dd>
+        <dd>{world.longTradeCodes}</dd>
       </dl>
       <h4>Bases and facilities</h4>
       <table className="table table-condensed table-striped">
         <tbody>
           <tr><td>Gas giants</td>
-          <td><input type="radio" readOnly checked={world.is_gas_giant} /></td></tr>
+          <td><input type="radio" readOnly checked={world.isGasGiant} /></td></tr>
           <tr><td>Naval base</td>
-          <td><input type="radio" readOnly checked={world.is_naval_base} /></td></tr>
+          <td><input type="radio" readOnly checked={world.isNavalBase} /></td></tr>
           <tr><td>Scout base</td>
-          <td><input type="radio" readOnly checked={world.is_scout_base} /></td></tr>
+          <td><input type="radio" readOnly checked={world.isScoutBase} /></td></tr>
           <tr><td>Research base</td>
-          <td><input type="radio" readOnly checked={world.is_research_base} /></td></tr>
+          <td><input type="radio" readOnly checked={world.isResearchBase} /></td></tr>
           <tr><td>Pirate base</td>
-          <td><input type="radio" readOnly checked={world.is_pirate_base} /></td></tr>
+          <td><input type="radio" readOnly checked={world.isPirateBase} /></td></tr>
           <tr><td>Traveler's Aid Society</td>
-          <td><input type="radio" readOnly checked={world.is_tas} /></td></tr>
+          <td><input type="radio" readOnly checked={world.isTas} /></td></tr>
           <tr><td>Imperial Consulate</td>
-          <td><input type="radio" readOnly checked={world.is_consulate} /></td></tr>
+          <td><input type="radio" readOnly checked={world.isConsulate} /></td></tr>
         </tbody>
       </table>
     </bs.Panel>
