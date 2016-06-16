@@ -20,7 +20,7 @@ var entry = [
 ];
 
 var output = {
-  path: path.join(__dirname, 'dist'),
+  path: path.join(__dirname, '../dist'),
   filename: 'bundle.js',
   publicPath: 'http://localhost:' + serverPort + '/'
 }
@@ -29,7 +29,7 @@ loaders = [
   {
     test: /\.js$/,
     loaders: ['react-hot', 'babel'],
-    include: path.join(__dirname, 'src'),
+    include: path.join(__dirname, '../src'),
     exclude: /node_modules/,
   },
   {
@@ -51,7 +51,7 @@ module.exports = {
     loaders: loaders
   },
   resolve: {
-    root: path.join(__dirname, 'src'),
+    root: path.join(__dirname, '../src'),
     extensions: ['', '.js']
   },
   serverPort: serverPort,
