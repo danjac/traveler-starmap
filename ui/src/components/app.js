@@ -2,6 +2,7 @@ import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import * as bs from 'react-bootstrap';
 import * as actions from '../actions';
+import { normalizeUrl } from '../api';
 
 import Search from './search';
 import Starmap from './starmap';
@@ -54,12 +55,12 @@ export class App extends React.Component {
 
     const { worlds } = subsector;
 
-    const pngUrl = `${__API_URL__}${subsector.id}/map/`;
-    const csvUrl = `${__API_URL__}${subsector.id}/csv/`;
+    const pngUrl = normalizeUrl(`${subsector.id}/map/`);
+    const csvUrl = normalizeUrl(`${subsector.id}/csv/`);
 
     return (
       <bs.Grid>
-        <h2>{subsector.name} Subsector </h2>
+        <h2>{subsector.name} Subsector</h2>
         <bs.Row>
           <bs.Col md={8}>
             <bs.ButtonGroup>

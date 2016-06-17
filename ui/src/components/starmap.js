@@ -236,7 +236,7 @@ class Starmap extends React.Component {
 
   render() {
     return (
-      <canvas width={360} height={550} onClick={this.onClick} />
+      <canvas width={360} height={555} onClick={this.onClick} />
     );
   }
 

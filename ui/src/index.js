@@ -1,16 +1,16 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Provider } from 'react-redux';
+import Root from './components/root';
 
-import App from './components/app';
-import store from './store';
+import configureStore from './store';
 import { getRandomSubsector } from './actions';
+
+const store = configureStore();
 
 store.dispatch(getRandomSubsector());
 
+
 ReactDOM.render(
-  <Provider store={store}>
-    <App />
-  </Provider>,
+  <Root store={store} />,
   document.getElementById('app')
 );

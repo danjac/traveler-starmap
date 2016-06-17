@@ -15,6 +15,13 @@ function parseJSON(response) {
   return response.json();
 }
 
+export function normalizeUrl(url) {
+  if (!url.startsWith(__API_URL__)) {
+    return __API_URL__ + url;
+  }
+  return url;
+}
+
 export function handleRequest(method, url, data) {
   const headers = {
     Accept: 'application/json',
@@ -26,11 +33,7 @@ export function handleRequest(method, url, data) {
     headers['Content-Type'] = 'application/json';
   }
 
-  if (!url.startsWith(__API_URL__)) {
-    url = __API_URL__ + url;
-  }
-
-  return fetch(url, {
+  return fetch(normalizeUrl(url), {
     mode: 'cors',
     method,
     body,
