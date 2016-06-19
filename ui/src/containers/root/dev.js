@@ -1,21 +1,8 @@
 import React from 'react';
 import { Provider } from 'react-redux';
 
-import { createDevTools } from 'redux-devtools';
-import LogMonitor from 'redux-devtools-log-monitor';
-import DockMonitor from 'redux-devtools-dock-monitor';
-
 import App from '../app';
-
-
-export const DevTools = createDevTools(
-  <DockMonitor
-    toggleVisibilityKey="ctrl-h"
-    changePositionKey="ctrl-q"
-  >
-    <LogMonitor />
-  </DockMonitor>
-);
+import DevTools from '../devtools';
 
 
 export default class Root extends React.Component {
