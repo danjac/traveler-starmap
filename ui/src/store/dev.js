@@ -3,7 +3,7 @@ import { persistState } from 'redux-devtools';
 import thunk from 'redux-thunk';
 import createLogger from 'redux-logger';
 
-import { DevTools } from '../components/root/dev';
+import { DevTools } from '../containers/root/dev';
 import rootReducer from '../reducers';
 
 const enhancer = compose(

@@ -50,7 +50,7 @@ loaders = [
 ];
 
 module.exports = {
-  devtool: 'eval',
+  devtool: 'cheap-module-eval-source-map',
   entry: entry,
   plugins: plugins,
   output: output,

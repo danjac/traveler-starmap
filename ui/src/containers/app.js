@@ -4,10 +4,10 @@ import * as bs from 'react-bootstrap';
 import * as actions from '../actions';
 import { normalizeUrl } from '../api';
 
-import Search from './search';
-import Starmap from './starmap';
-import WorldDetail from './world-detail';
-import WorldList from './world-list';
+import Search from '../components/search';
+import Starmap from '../components/starmap';
+import WorldDetail from '../components/world-detail';
+import WorldList from '../components/world-list';
 
 require('bootstrap/dist/css/bootstrap.min.css');
 require('bootstrap/dist/css/bootstrap-theme.min.css');
