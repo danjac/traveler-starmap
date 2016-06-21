@@ -1,8 +1,16 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import * as bs from 'react-bootstrap';
-import * as actions from '../actions';
 import { normalizeUrl } from '../api';
+
+import {
+  selectWorld,
+  newSubsector,
+  getRandomSubsector,
+  jumpTo,
+} from '../modules/subsector';
+
+import { search } from '../modules/search';
 
 import Search from '../components/search';
 import Starmap from '../components/starmap';
@@ -112,7 +120,9 @@ export class App extends React.Component {
 }
 
 const mapStateToProps = state => {
-  const { subsector, selected, searchResults, searchQuery } = state;
+  const { subsector, selected } = state.subsector;
+  const { searchResults, searchQuery } = state.search;
+
   return {
     subsector,
     selected,
@@ -125,22 +135,22 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     onSelectAll() {
-      dispatch(actions.selectWorld(null));
+      dispatch(selectWorld(null));
     },
     onSelectWorld(world) {
-      dispatch(actions.selectWorld(world));
+      dispatch(selectWorld(world));
     },
     onNewSubsector() {
-      dispatch(actions.newSubsector());
+      dispatch(newSubsector());
     },
     onRandomSubsector() {
-      dispatch(actions.getRandomSubsector());
+      dispatch(getRandomSubsector());
     },
     onSearch(value) {
-      dispatch(actions.search(value));
+      dispatch(search(value));
     },
     onSearchSelect(value) {
-      dispatch(actions.jumpTo(value));
+      dispatch(jumpTo(value));
     },
   };
 };
