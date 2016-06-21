@@ -35,6 +35,7 @@ export function handleRequest(method, url, data) {
 
   return fetch(normalizeUrl(url), {
     mode: 'cors',
+    credentials: true,
     method,
     body,
     headers,
