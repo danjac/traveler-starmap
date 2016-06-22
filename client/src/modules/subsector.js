@@ -11,14 +11,10 @@ export const selectWorld = world => createAction(WORLD_SELECTED, world);
 
 const fetchSubsector = (fn, world) => {
   return dispatch => {
-    dispatch(selectWorld(null));
     dispatch(createAction(NEW_SUBSECTOR_REQUEST));
     fn()
-    .then(payload => {
-      dispatch(createAction(NEW_SUBSECTOR_SUCCESS, payload));
-      if (world) {
-        dispatch(selectWorld(world));
-      }
+    .then(subsector => {
+      dispatch(createAction(NEW_SUBSECTOR_SUCCESS, { subsector, selected: world }));
     }, err => {
       dispatch(NEW_SUBSECTOR_FAILURE, err);
     });
@@ -53,7 +49,7 @@ export default function (state = initialState, action) {
     case NEW_SUBSECTOR_REQUEST:
       return { ...state, subsector: null, selected: null };
     case NEW_SUBSECTOR_SUCCESS:
-      return { ...state, subsector: action.payload };
+      return { ...state, ...action.payload };
     default:
       return state;
 
