@@ -3,11 +3,13 @@ import { createAction } from './utils';
 import { clearSearch } from './search';
 
 const WORLD_SELECTED = 'traveler-starmap/subsector/WORLD_SELECTED';
+const SELECT_ALL = 'traveler-starmap/subsector/SELECT_ALL';
 const NEW_SUBSECTOR_REQUEST = 'traveler-starmap/subsector/NEW_SUBSECTOR_REQUEST';
 const NEW_SUBSECTOR_SUCCESS = 'traveler-starmap/subsector/NEW_SUBSECTOR_SUCCESS';
 const NEW_SUBSECTOR_FAILURE = 'traveler-starmap/subsector/NEW_SUBSECTOR_FAILURE';
 
 export const selectWorld = world => createAction(WORLD_SELECTED, world);
+export const selectAll = () => createAction(SELECT_ALL);
 
 const fetchSubsector = (fn, world) => {
   return dispatch => {
@@ -44,6 +46,8 @@ const initialState = {
 
 export default function (state = initialState, action) {
   switch (action.type) {
+    case SELECT_ALL:
+      return { ...state, selected: null };
     case WORLD_SELECTED:
       return { ...state, selected: action.payload };
     case NEW_SUBSECTOR_REQUEST:
@@ -52,6 +56,5 @@ export default function (state = initialState, action) {
       return { ...state, ...action.payload };
     default:
       return state;
-
   }
 }

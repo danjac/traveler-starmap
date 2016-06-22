@@ -4,6 +4,7 @@ import * as bs from 'react-bootstrap';
 import { normalizeUrl } from '../api';
 
 import {
+  selectAll,
   selectWorld,
   newSubsector,
   getRandomSubsector,
@@ -135,7 +136,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     onSelectAll() {
-      dispatch(selectWorld(null));
+      dispatch(selectAll());
     },
     onSelectWorld(world) {
       dispatch(selectWorld(world));
